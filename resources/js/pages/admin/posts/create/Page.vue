@@ -3,23 +3,20 @@ import {
     ImageInput,
     MarkdownInput,
     SwitchInput,
-    TagsListboxInput,
+    TagsInput,
+    TextareaInput,
     TextInput,
 } from '@/components/form';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Field,
-    FieldDescription,
-    FieldGroup,
-    FieldLegend,
-    FieldSet,
-} from '@/components/ui/field';
+import { Card, CardContent } from '@/components/ui/card';
+import { Field, FieldGroup, FieldSet } from '@/components/ui/field';
 import { Spinner } from '@/components/ui/spinner';
 import AdminLayout from '@/layouts/AdminLayout.vue';
-import { cn, validate } from '@/lib/utils';
+import { cn, truncateText, validate } from '@/lib/utils';
 import posts from '@/routes/admin/posts';
 import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 const title = 'Crear artículo';
 
@@ -29,12 +26,15 @@ const breadcrumb = [
     },
 ];
 const form = useForm({
-    name: 'Hubert Alva',
-    content: '',
-    is_published: false,
+    name: undefined,
+    excerpt: undefined,
+    content: undefined,
     thumbnail: null,
+    authors: undefined,
+    published_at: true,
     is_new_thumbnail: false,
-    tags: [1],
+    delete_at: null,
+    tags: null,
 }).withPrecognition('post', posts.store().url);
 
 const submit = () => form.submit();
@@ -43,88 +43,132 @@ form.validateFiles();
 
 const validateField = validate(form);
 
-const currentThumbnailUrl = ref(form.thumbnail);
+const publishLabel = computed(() => {
+    return form.published_at ? 'Publicar' : 'Borrador';
+});
 
-const clearError = (field: string) => {
-    const key = field as keyof typeof form.errors;
-    if (form.errors[key]) {
-        form.clearErrors(key);
+window.addEventListener('beforeunload', (event) => {
+    if (form.isDirty) {
+        event.preventDefault();
+        event.returnValue = '';
     }
-};
+});
 
-const options = [
-    { name: 'Next.js', id: 1, created_at: '2021-01-01' },
-    { name: 'SvelteKit', id: 2, created_at: '2021-01-01' },
-    { name: 'Nuxt', id: 3, created_at: '2021-01-01' },
-    { name: 'Remix', id: 4, created_at: '2021-01-01' },
-    { name: 'Astro', id: 5, created_at: '2021-01-01' },
-];
+const currentThumbnailUrl = ref(form.thumbnail);
 </script>
 
 <template>
     <AdminLayout :breadcrumb="breadcrumb" :title="title" container="small">
-        <form
-            :class="cn(form.processing ? 'pointer-events-none opacity-50' : '')"
-            @submit.prevent="submit"
-        >
-            <FieldGroup>
-                <FieldSet>
-                    <FieldLegend>Payment Method</FieldLegend>
-                    <FieldDescription>
-                        All transactions are secure and encrypted
-                    </FieldDescription>
-                    <FieldGroup>
-                        <TextInput
-                            id="name"
-                            v-model="form.name"
-                            :error="form.errors.name"
-                            label="Nombre"
-                            placeholder="Nombre completo"
-                            type="text"
-                            @change="validateField('name')"
-                        />
+        <div class="space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap items-center justify-start gap-2">
+                    <div class="flex items-center justify-start gap-2">
+                        <h1 class="text-2xl font-semibold">
+                            {{
+                                truncateText(
+                                    form.name ? form.name : 'Nuevo artículo',
+                                    35,
+                                )
+                            }}
+                        </h1>
+                    </div>
 
-                        <TagsListboxInput
-                            v-model="form.tags"
-                            :options="options"
-                            label="Frameworks"
-                        />
+                    <Badge :variant="form.published_at ? 'success' : 'warn'">
+                        {{ publishLabel }}
+                    </Badge>
+                </div>
+            </div>
 
-                        <SwitchInput
-                            id="is_published"
-                            v-model="form.is_published"
-                            :error="form.errors.is_published"
-                            @change="validateField('is_published')"
-                        />
+            <Card>
+                <CardContent>
+                    <form
+                        :class="
+                            cn(
+                                form.processing
+                                    ? 'pointer-events-none opacity-50'
+                                    : '',
+                            )
+                        "
+                        @submit.prevent="submit"
+                    >
+                        <FieldGroup>
+                            <FieldSet>
+                                <div class="rounded-md border p-4">
+                                    <SwitchInput
+                                        id="published_at"
+                                        v-model="form.published_at"
+                                        :error="form.errors.published_at"
+                                        description="Si creas el artículo sin publicarlo no se mostrará en la sección de blog."
+                                        label="¿Publicar artículo?"
+                                        @change="validateField('published_at')"
+                                    />
+                                </div>
 
-                        <MarkdownInput
-                            v-model="form.content"
-                            :error="form.errors.content"
-                            label="Contenido"
-                            @validate="validateField('content')"
-                        />
+                                <FieldGroup>
+                                    <TextInput
+                                        id="name"
+                                        v-model="form.name"
+                                        :error="form.errors.name"
+                                        label="Nombre"
+                                        placeholder="Nuevo post"
+                                        type="text"
+                                        @change="validateField('name')"
+                                    />
 
-                        <ImageInput
-                            v-model="form.thumbnail"
-                            v-model:isNewImage="form.is_new_thumbnail"
-                            :currentImageUrl="currentThumbnailUrl"
-                            :error="form.errors.thumbnail"
-                            description="PNG, JPG, WEBP (máx. 20 MB)"
-                            label="Thumbnail"
-                            @clearErrors="clearError('thumbnail')"
-                            @validate="validateField('thumbnail')"
-                        />
-                    </FieldGroup>
-                </FieldSet>
+                                    <TextareaInput
+                                        id="excerpt"
+                                        v-model="form.excerpt"
+                                        :error="form.errors.excerpt"
+                                        label="Extracto"
+                                        placeholder="Tu contenido"
+                                        @change="validateField('excerpt')"
+                                    />
 
-                <Field orientation="horizontal">
-                    <Spinner v-if="form.validating" />
-                    <Button :disabled="form.processing" type="submit">
-                        Submit
-                    </Button>
-                    <Button type="button" variant="outline"> Cancel </Button>
-                </Field>
-            </FieldGroup>
-        </form>
+                                    <MarkdownInput
+                                        v-model="form.content"
+                                        :error="form.errors.content"
+                                        label="Contenido"
+                                        @validate="validateField('content')"
+                                    />
+
+                                    <ImageInput
+                                        v-model="form.thumbnail"
+                                        v-model:isNewImage="
+                                            form.is_new_thumbnail
+                                        "
+                                        :currentImageUrl="currentThumbnailUrl"
+                                        :error="form.errors.thumbnail"
+                                        description="PNG, JPG, WEBP (máx. 20 MB)"
+                                        label="Thumbnail"
+                                        @validate="validateField('thumbnail')"
+                                    />
+
+                                    <TagsInput
+                                        v-model="form.tags"
+                                        :error="form.errors.tags"
+                                        :max="10"
+                                        label="Etiquetas"
+                                        @change="validateField('tags')"
+                                    />
+                                </FieldGroup>
+                            </FieldSet>
+
+                            <Field orientation="horizontal">
+                                <Spinner v-if="form.validating" />
+                                <Button
+                                    :disabled="form.processing"
+                                    type="submit"
+                                >
+                                    Crear
+                                </Button>
+                                <Button type="button" variant="outline">
+                                    Cancelar
+                                </Button>
+                            </Field>
+                        </FieldGroup>
+                    </form>
+                </CardContent>
+            </Card>
+        </div>
     </AdminLayout>
 </template>

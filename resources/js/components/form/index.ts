@@ -1,4 +1,5 @@
 export { default as CheckboxInput } from './CheckboxInput.vue';
+export { default as FileInput } from './FileInput.vue';
 export { default as ImageInput } from './ImageInput.vue';
 export { default as MarkdownInput } from './MarkdownInput.vue';
 export { default as NumberInput } from './NumberInput.vue';

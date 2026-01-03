@@ -1,10 +1,32 @@
 <script lang="ts" setup>
 import { Button } from '@/components/ui/button';
-import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field';
-import { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete } from '@/components/ui/tags-input';
+import {
+    Field,
+    FieldDescription,
+    FieldError,
+    FieldLabel,
+} from '@/components/ui/field';
+import {
+    Popover,
+    PopoverAnchor,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+    TagsInput,
+    TagsInputInput,
+    TagsInputItem,
+    TagsInputItemDelete,
+} from '@/components/ui/tags-input';
 import { CheckIcon, ChevronDown } from 'lucide-vue-next';
-import { ListboxContent, ListboxFilter, ListboxItem, ListboxItemIndicator, ListboxRoot, useFilter } from 'reka-ui';
+import {
+    ListboxContent,
+    ListboxFilter,
+    ListboxItem,
+    ListboxItemIndicator,
+    ListboxRoot,
+    useFilter,
+} from 'reka-ui';
 import { computed, ref, watch } from 'vue';
 
 interface Props {

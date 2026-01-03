@@ -6,7 +6,7 @@ import {
     FieldLabel,
 } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
-import { UploadCloud } from 'lucide-vue-next';
+import { Upload } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 interface Props {
@@ -26,7 +26,6 @@ defineOptions({
 const emit = defineEmits<{
     (e: 'update:isNewImage', value: boolean): void;
     (e: 'validate'): void;
-    (e: 'clearErrors'): void;
 }>();
 
 const isNewImage = computed({
@@ -108,7 +107,7 @@ const clearImage = () => {
         fileInputRef.value.value = '';
     }
 
-    emit('clearErrors');
+    emit('validate');
 
     isNewImage.value = false;
 };
@@ -125,10 +124,10 @@ const clearImage = () => {
                 <button
                     :class="
                         cn(
-                            'group flex min-h-32 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed bg-gray-50 p-1 text-center transition hover:border-blue-400 hover:bg-blue-50/50 dark:bg-neutral-900 dark:hover:border-blue-700 dark:hover:bg-blue-600/20',
+                            'group flex min-h-36 w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-1 text-center transition',
                             isDragging
                                 ? 'border-blue-400 bg-blue-50/50 dark:border-blue-700 dark:bg-blue-600/20'
-                                : 'border-gray-300 dark:border-gray-600',
+                                : 'border-gray-300 bg-gray-50 hover:border-blue-400 hover:bg-blue-50/50 dark:border-gray-600 dark:bg-neutral-900 dark:hover:border-blue-700 dark:hover:bg-blue-600/20',
                             props.error
                                 ? 'border-red-500 bg-red-50 dark:border-red-700 dark:bg-red-600/20'
                                 : '',
@@ -144,28 +143,18 @@ const clearImage = () => {
                         v-if="previewUrl"
                         :src="previewUrl"
                         alt="Preview"
-                        class="h-32 rounded object-contain"
+                        class="h-36 rounded object-contain"
                     />
 
                     <template v-else>
-                        <UploadCloud
-                            :class="[
-                                'size-8 group-hover:text-blue-400 dark:group-hover:text-blue-500',
-                                isDragging
-                                    ? 'text-blue-400'
-                                    : 'text-gray-400 dark:text-gray-300',
-                            ]"
-                        />
-                        <p
-                            :class="[
-                                'text-sm group-hover:text-blue-500 dark:group-hover:text-blue-600',
-                                isDragging
-                                    ? 'text-blue-500'
-                                    : 'text-gray-500 dark:text-gray-400',
-                            ]"
+                        <div
+                            class="flex flex-col items-center justify-center gap-3"
                         >
-                            Arrastra y suelta o selecciona un archivo
-                        </p>
+                            <Upload class="size-6 text-muted-foreground" />
+                            <p class="text-sm text-muted-foreground">
+                                Arrastra y suelta o selecciona un archivo
+                            </p>
+                        </div>
                     </template>
                 </button>
 
