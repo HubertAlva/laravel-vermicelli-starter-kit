@@ -82,7 +82,6 @@ export type IndexTableProps<T> = {
     columns: Column<T>[];
     url: string;
     label: string;
-    initialFilters: Filters;
     deferredData: string;
     onRowClick?: (row: T) => void;
 };

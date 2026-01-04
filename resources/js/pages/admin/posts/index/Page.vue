@@ -3,9 +3,8 @@ import { IndexTable } from '@/components/admin';
 import { Button } from '@/components/ui/button';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { create, edit, index } from '@/routes/admin/posts';
-import { Column, Filters } from '@/types/adminTable';
+import { Column } from '@/types/adminTable';
 import { Link, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
 
 type DataType = App.Data.PostData;
 
@@ -36,14 +35,6 @@ const columns = [
 const url = index().url;
 const label = 'artículos';
 
-const initialFilters = ref<Filters>({
-    page: 1,
-    filter: {
-        search: undefined,
-        trashed: undefined,
-    },
-});
-
 const handleRowClick = (row: DataType) => {
     router.get(
         edit(row.id),
@@ -73,7 +64,6 @@ const handleRowClick = (row: DataType) => {
                 :collection="props.posts"
                 :columns="columns"
                 :deferredData="deferredData"
-                :initialFilters="initialFilters"
                 :label="label"
                 :onRowClick="handleRowClick"
                 :url="url"

@@ -3,12 +3,21 @@ import { Table, TableBody, TableFooter, TableHeader, TableRow } from '@/componen
 import { Spinner } from '@/components/ui/spinner';
 import { useTableFilters } from '@/composables/useTable';
 import { cn } from '@/lib/utils';
-import { IndexTableProps } from '@/types/adminTable';
+import { Filters, IndexTableProps } from '@/types/adminTable';
 import { Deferred } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 const props = defineProps<IndexTableProps<T>>();
 
-const { filters, refresh } = useTableFilters(props.url, props.initialFilters);
+const initialFilters = ref<Filters>({
+    page: 1,
+    filter: {
+        search: undefined,
+        trashed: undefined,
+    },
+});
+
+const { filters, refresh } = useTableFilters(props.url, initialFilters.value);
 </script>
 
 <template>
