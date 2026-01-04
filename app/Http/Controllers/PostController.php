@@ -136,18 +136,25 @@ class PostController extends Controller
 
     }
 
-    public function edit(Post $post)
+    public function edit(Post $post): Request
     {
-
+        dd('edit', $post);
     }
 
-    public function destroy(Post $post)
+    public function destroy(Post $post): RedirectResponse
     {
-
+        dd('delete', $post);
     }
 
-    public function soft_delete(Post $post)
+    public function soft_delete(Post $post): RedirectResponse
     {
+        $post->published_at = null;
+        $post->save();
+
+        $post->delete();
+
+        return Redirect::route('admin.posts.index')
+            ->with('success', 'Artículo enviado a papelera correctamente.');
 
     }
 

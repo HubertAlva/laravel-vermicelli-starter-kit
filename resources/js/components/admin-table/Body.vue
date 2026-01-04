@@ -9,16 +9,9 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { BodyProps } from '@/types/adminTable';
 
-const props = defineProps<{
-    data: {
-        data: T[];
-        links: Array<App.Data.PaginatorLinkData>;
-        meta: App.Data.PaginatorMetaData;
-    };
-    columns: Array<{ field: string; header: string; type?: string }>;
-    label: string;
-}>();
+const props = defineProps<BodyProps<T>>();
 
 defineSlots<{
     default(props: { item: T; rowIndex: number }): any;
@@ -31,9 +24,10 @@ defineSlots<{
             <TableCaption>
                 <div class="flex flex-wrap items-center justify-between gap-3">
                     <span>
-                        Mostrando {{ data.meta.from }} al {{ data.meta.to }} de
-                        {{ data.meta.total }}
-                        {{ label }}
+                        Mostrando {{ props.collection.meta.from }} al
+                        {{ props.collection.meta.to }} de
+                        {{ props.collection.meta.total }}
+                        {{ props.label }}
                     </span>
                     <span>Lista de {{ props.label }}.</span>
                 </div>
@@ -52,9 +46,9 @@ defineSlots<{
                 </TableRow>
             </TableHeader>
             <TableBody>
-                <template v-if="data.data.length">
+                <template v-if="props.collection.data.length">
                     <template
-                        v-for="(item, rowIndex) in data.data"
+                        v-for="(item, rowIndex) in collection.data"
                         :key="rowIndex"
                     >
                         <slot :item="item" :rowIndex="rowIndex" />

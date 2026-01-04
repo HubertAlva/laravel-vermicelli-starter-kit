@@ -2,101 +2,65 @@
 import { Button } from '@/components/ui/button';
 import { TableCell, TableRow } from '@/components/ui/table';
 import Tooltip from '@/plugins/Tooltip.vue';
-import type { AdminRow, Column } from '@/types/adminTable';
+import { AdminRow, RowProps } from '@/types/adminTable';
 import { router } from '@inertiajs/vue3';
 import { Trash } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import CellContent from './partials/CellContent.vue';
 
-interface Props {
-    // filters: App.Data.FiltersData;
-    item: T;
-    columns: Column<T>[];
-    target: string;
-    allowSoftDelete?: boolean;
-    allowActions?: boolean;
-}
-
 const {
-    // filters,
+    filters,
     item,
     columns,
-    target,
+    url,
     allowSoftDelete = true,
     allowActions = true,
-} = defineProps<Props>();
+} = defineProps<RowProps<T>>();
 
-// const localFilters = ref({
-//     search: filters.search,
-//     per_page: filters.per_page || 10,
-//     page: filters.page || 1,
-//     sort_by: filters.sort_by || 'id',
-//     sort_dir: filters.sort_dir || 'desc',
-//     only_trashed: filters.only_trashed || false,
-// });
-
-// const updateFilters = debounce(() => {
-//     router.get(
-//         route('admin.' + target + '.index'),
-//         pickBy(localFilters.value),
-//         {
-//             preserveState: true,
-//             replace: true,
-//         },
-//     );
-// }, 200);
+const emit = defineEmits<{
+    (e: 'refresh'): void;
+}>();
 
 const handleDelete = (row: T) => {
-    const routeName = ref(
+    const targetUrl = ref(
         row.deleted_at !== null
-            ? 'admin.' + target + '.destroy'
-            : 'admin.' + target + '.soft-delete',
+            ? `${url}/ ${row.id}`
+            : `${url}/${row.id}/soft-delete`,
     );
 
-    console.log(routeName.value);
-
     if (!allowSoftDelete) {
-        routeName.value = 'admin.' + target + '.destroy';
+        targetUrl.value = `${url}/ ${row.id}`;
     }
 
     if (!confirm('¿Está seguro de que desea eliminar este elemento?')) {
         return;
     }
 
-    router.delete(route(routeName.value, { id: row.id }), {
+    router.delete(targetUrl.value, {
         preserveState: true,
         replace: true,
-        // onSuccess: () => {
-        //     updateFilters();
-        // },
+        onSuccess: () => {
+            emit('refresh');
+        },
     });
 };
 
 const deleteTooltip = computed(() => {
     const label = ref('');
 
-    // if (allowSoftDelete) {
-    //     label.value = localFilters.value.only_trashed
-    //         ? 'Eliminar'
-    //         : 'Mover a papelera';
-    // } else {
-    //     label.value = 'Eliminar permanentemente';
-    // }
+    if (allowSoftDelete) {
+        label.value =
+            filters.filter.trashed === 'only' ? 'Eliminar' : 'Mover a papelera';
+    } else {
+        label.value = 'Eliminar permanentemente';
+    }
 
     return label.value;
 });
-
-// watch(
-//     () => filters,
-//     () => {
-//         updateFilters();
-//     },
-//     { deep: true },
-// );
 </script>
 
 <template>
-    <TableRow class="cursor-pointer">
+    <TableRow>
         <TableCell
             v-for="(column, cellIndex) in columns"
             :key="column.field"

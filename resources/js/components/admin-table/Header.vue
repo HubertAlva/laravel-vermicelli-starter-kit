@@ -2,40 +2,28 @@
 import { CardHeader } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { router } from '@inertiajs/vue3';
-import { debounce, pickBy } from 'lodash';
+import { HeaderProps } from '@/types/adminTable';
 import { Search } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
 
-interface Props {
-    target: string;
-    allowSoftDelete?: boolean;
-}
+const { allowSoftDelete = true, initialFilters } = defineProps<HeaderProps>();
 
-const { target, allowSoftDelete = true } = defineProps<Props>();
+const emit = defineEmits<{
+    (e: 'refresh'): void;
+}>();
 
-const filters = ref({
-    page: 1,
-    filter: {
-        search: '',
-        trashed: undefined as 'only' | 'with' | undefined,
-    },
-});
+const filters = ref(initialFilters);
 
-const updateFilters = debounce(() => {
-    router.get(target, pickBy(filters.value), {
-        preserveState: true,
-        replace: true,
-    });
-}, 200);
-
-const handleTrash = () => {
+const handleShowTrashed = () => {
     filters.value.filter.trashed =
         filters.value.filter.trashed === 'only' ? undefined : 'only';
-    updateFilters();
 };
 
-watch(filters, updateFilters, { deep: true });
+watch(
+    () => filters,
+    () => emit('refresh'),
+    { deep: true },
+);
 </script>
 
 <template>
@@ -60,7 +48,7 @@ watch(filters, updateFilters, { deep: true });
                     <Checkbox
                         id="only_trashed"
                         :model-value="filters.filter.trashed === 'only'"
-                        @update:model-value="handleTrash"
+                        @update:model-value="handleShowTrashed"
                     />
                     <label
                         class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

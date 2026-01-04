@@ -29,3 +29,60 @@ export type Column<T> = {
     /** Optional rendering hint */
     type?: ColumnType;
 };
+
+// Table filters definition
+export type Filters = {
+    page: number;
+    filter: {
+        search: string | undefined;
+        trashed: 'only' | 'with' | undefined;
+    };
+};
+
+// Table Header props
+export type HeaderProps = {
+    allowSoftDelete?: boolean;
+    initialFilters: Filters;
+};
+
+// Table Body props
+export type BodyProps<T> = {
+    collection: {
+        data: T[];
+        links: App.Data.PaginatorLinkData[];
+        meta: App.Data.PaginatorMetaData;
+    };
+    columns: Array<{ field: string; header: string; type?: string }>;
+    label: string;
+};
+
+// Table Row props
+export type RowProps<T> = {
+    item: T;
+    columns: Column<T>[];
+    url: string;
+    allowSoftDelete?: boolean;
+    allowActions?: boolean;
+    filters: Filters;
+};
+
+// Table Cell content props
+export type CellProps<T> = {
+    column: Column<T>;
+    row: T;
+};
+
+// Index Table props
+export type IndexTableProps<T> = {
+    collection?: {
+        data: T[];
+        links: App.Data.PaginatorLinkData[];
+        meta: App.Data.PaginatorMetaData;
+    };
+    columns: Column<T>[];
+    url: string;
+    label: string;
+    initialFilters: Filters;
+    deferredData: string;
+    onRowClick?: (row: T) => void;
+};

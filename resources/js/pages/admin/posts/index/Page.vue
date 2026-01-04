@@ -1,22 +1,18 @@
 <script lang="ts" setup>
-import {
-    Table,
-    TableBody,
-    TableFooter,
-    TableHeader,
-    TableRow,
-} from '@/components/admin-table';
+import { IndexTable } from '@/components/admin';
 import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
 import AdminLayout from '@/layouts/AdminLayout.vue';
-import { create, edit } from '@/routes/admin/posts';
-import { Column } from '@/types/adminTable';
-import { Deferred, Link, router } from '@inertiajs/vue3';
+import { create, edit, index } from '@/routes/admin/posts';
+import { Column, Filters } from '@/types/adminTable';
+import { Link, router } from '@inertiajs/vue3';
+import { ref } from 'vue';
+
+type DataType = App.Data.PostData;
 
 const props = defineProps<{
     posts?: {
-        data: Array<App.Data.PostData>;
-        links: Array<App.Data.PaginatorLinkData>;
+        data: DataType[];
+        links: App.Data.PaginatorLinkData[];
         meta: App.Data.PaginatorMetaData;
     };
 }>();
@@ -29,16 +25,26 @@ const breadcrumb = [
     },
 ];
 
+const deferredData = 'posts';
+
 const columns = [
     { field: 'name', header: 'Nombre' },
     { field: 'published_at', header: 'Estado' },
     { field: 'created_at', header: 'Creado' },
-] satisfies Column<App.Data.PostData>[];
+] satisfies Column<DataType>[];
 
-const target = '/admin/posts';
+const url = index().url;
 const label = 'artículos';
 
-const handleRowClick = (row: App.Data.PostData) => {
+const initialFilters = ref<Filters>({
+    page: 1,
+    filter: {
+        search: undefined,
+        trashed: undefined,
+    },
+});
+
+const handleRowClick = (row: DataType) => {
     router.get(
         edit(row.id),
         {},
@@ -53,49 +59,25 @@ const handleRowClick = (row: App.Data.PostData) => {
 <template>
     <AdminLayout :breadcrumb="breadcrumb" :title="title">
         <div class="space-y-3">
-            <div class="flex items-center justify-between gap-4">
-                <h1>{{ title }}</h1>
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <h1 class="text-2xl font-semibold">{{ title }}</h1>
 
-                <Button>
-                    <Link :href="create().url"> Nuevo artículo </Link>
-                </Button>
+                <div class="flex items-center justify-end gap-2">
+                    <Button asChild>
+                        <Link :href="create().url">Nuevo artículo</Link>
+                    </Button>
+                </div>
             </div>
 
-            <Table>
-                <TableHeader :target="target" />
-
-                <Deferred data="posts">
-                    <template #fallback>
-                        <div
-                            class="flex min-h-[660px] items-center justify-center"
-                        >
-                            <Spinner class="size-8" />
-                        </div>
-                    </template>
-
-                    <template v-if="props.posts">
-                        <TableBody
-                            :columns="columns"
-                            :data="props.posts"
-                            :label="label"
-                        >
-                            <template #default="{ item }">
-                                <TableRow
-                                    :columns="columns"
-                                    :item="item"
-                                    :target="target"
-                                    @click="handleRowClick(item)"
-                                />
-                            </template>
-                        </TableBody>
-
-                        <TableFooter
-                            :links="props.posts.links"
-                            :meta="props.posts.meta"
-                        />
-                    </template>
-                </Deferred>
-            </Table>
+            <IndexTable
+                :collection="props.posts"
+                :columns="columns"
+                :deferredData="deferredData"
+                :initialFilters="initialFilters"
+                :label="label"
+                :onRowClick="handleRowClick"
+                :url="url"
+            />
         </div>
     </AdminLayout>
 </template>

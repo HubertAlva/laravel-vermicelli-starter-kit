@@ -1,17 +1,14 @@
 <script generic="T extends Record<string, any>" lang="ts" setup>
 import { Badge } from '@/components/ui/badge';
 import { truncateText } from '@/lib/utils';
-import { Column } from '@/types/adminTable';
+import { CellProps, Column } from '@/types/adminTable';
 import { computed } from 'vue';
 
 interface Role {
     name: string;
 }
 
-const props = defineProps<{
-    column: Column<T>;
-    row: T;
-}>();
+const props = defineProps<CellProps<T>>();
 
 const resolveValue = (row: T, field: Column<T>['field']): unknown => {
     if (typeof field === 'string' && field.includes('.')) {
