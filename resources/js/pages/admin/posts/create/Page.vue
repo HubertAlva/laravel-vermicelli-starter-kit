@@ -30,7 +30,6 @@ const form = useForm({
     excerpt: undefined,
     content: undefined,
     thumbnail: null,
-    authors: undefined,
     published_at: true,
     is_new_thumbnail: false,
     delete_at: null,
@@ -58,9 +57,11 @@ const currentThumbnailUrl = ref(form.thumbnail);
 </script>
 
 <template>
-    <AdminLayout :breadcrumb="breadcrumb" :title="title" container="small">
-        <div class="space-y-4">
-            <div class="flex flex-wrap items-center justify-between gap-4">
+    <AdminLayout :breadcrumb="breadcrumb" :title="title" container="full">
+        <div>
+            <div
+                class="sticky top-0 z-10 -mt-4 flex flex-wrap items-center justify-between gap-4 bg-muted py-4"
+            >
                 <div class="flex flex-wrap items-center justify-start gap-2">
                     <div class="flex items-center justify-start gap-2">
                         <h1 class="text-2xl font-semibold">
@@ -77,34 +78,39 @@ const currentThumbnailUrl = ref(form.thumbnail);
                         {{ publishLabel }}
                     </Badge>
                 </div>
+
+                <div>
+                    <Button type="submit" @click="submit">Crear</Button>
+                </div>
             </div>
 
-            <Card>
-                <CardContent>
-                    <form
-                        :class="
-                            cn(
-                                form.processing
-                                    ? 'pointer-events-none opacity-50'
-                                    : '',
-                            )
-                        "
-                        @submit.prevent="submit"
-                    >
+            <form
+                :class="
+                    cn(
+                        'grid gap-4 md:grid-cols-2',
+                        form.processing ? 'pointer-events-none opacity-50' : '',
+                    )
+                "
+                @submit.prevent="submit"
+            >
+                <Card>
+                    <CardContent>
                         <FieldGroup>
                             <FieldSet>
-                                <div class="rounded-md border p-4">
-                                    <SwitchInput
-                                        id="published_at"
-                                        v-model="form.published_at"
-                                        :error="form.errors.published_at"
-                                        description="Si creas el artículo sin publicarlo no se mostrará en la sección de blog."
-                                        label="¿Publicar artículo?"
-                                        @change="validateField('published_at')"
-                                    />
-                                </div>
-
                                 <FieldGroup>
+                                    <div class="rounded-md border p-4">
+                                        <SwitchInput
+                                            id="published_at"
+                                            v-model="form.published_at"
+                                            :error="form.errors.published_at"
+                                            description="Si creas el artículo sin publicarlo no se mostrará en la sección de blog."
+                                            label="¿Publicar artículo?"
+                                            @change="
+                                                validateField('published_at')
+                                            "
+                                        />
+                                    </div>
+
                                     <TextInput
                                         id="name"
                                         v-model="form.name"
@@ -123,14 +129,17 @@ const currentThumbnailUrl = ref(form.thumbnail);
                                         placeholder="Tu contenido"
                                         @change="validateField('excerpt')"
                                     />
+                                </FieldGroup>
+                            </FieldSet>
+                        </FieldGroup>
+                    </CardContent>
+                </Card>
 
-                                    <MarkdownInput
-                                        v-model="form.content"
-                                        :error="form.errors.content"
-                                        label="Contenido"
-                                        @validate="validateField('content')"
-                                    />
-
+                <Card>
+                    <CardContent>
+                        <FieldGroup>
+                            <FieldSet>
+                                <FieldGroup>
                                     <ImageInput
                                         v-model="form.thumbnail"
                                         v-model:isNewImage="
@@ -148,7 +157,24 @@ const currentThumbnailUrl = ref(form.thumbnail);
                                         :error="form.errors.tags"
                                         :max="10"
                                         label="Etiquetas"
-                                        @change="validateField('tags')"
+                                        @validate="validateField('tags')"
+                                    />
+                                </FieldGroup>
+                            </FieldSet>
+                        </FieldGroup>
+                    </CardContent>
+                </Card>
+
+                <Card class="md:col-span-2">
+                    <CardContent>
+                        <FieldGroup>
+                            <FieldSet>
+                                <FieldGroup>
+                                    <MarkdownInput
+                                        v-model="form.content"
+                                        :error="form.errors.content"
+                                        label="Contenido"
+                                        @validate="validateField('content')"
                                     />
                                 </FieldGroup>
                             </FieldSet>
@@ -161,14 +187,11 @@ const currentThumbnailUrl = ref(form.thumbnail);
                                 >
                                     Crear
                                 </Button>
-                                <Button type="button" variant="outline">
-                                    Cancelar
-                                </Button>
                             </Field>
                         </FieldGroup>
-                    </form>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            </form>
         </div>
     </AdminLayout>
 </template>

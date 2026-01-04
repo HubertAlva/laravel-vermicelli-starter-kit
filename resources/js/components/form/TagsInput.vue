@@ -22,6 +22,10 @@ interface Props {
 
 const props = defineProps<Props>();
 
+const emit = defineEmits<{
+    (e: 'validate'): void;
+}>();
+
 defineOptions({
     inheritAttrs: false,
 });
@@ -37,7 +41,11 @@ const model = defineModel<string[]>({
             {{ props.label }}
         </FieldLabel>
 
-        <TagsInput v-model="model" :max="props.max">
+        <TagsInput
+            v-model="model"
+            :max="props.max"
+            @update:modelValue="emit('validate')"
+        >
             <TagsInputItem v-for="item in model" :key="item" :value="item">
                 <TagsInputItemText />
                 <TagsInputItemDelete />
