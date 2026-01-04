@@ -9,7 +9,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { BodyProps } from '@/types/adminTable';
+import { BodyProps } from '@/types/table';
 
 const props = defineProps<BodyProps<T>>();
 

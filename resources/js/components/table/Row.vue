@@ -1,8 +1,8 @@
-<script generic="T extends AdminRow" lang="ts" setup>
+<script generic="T" lang="ts" setup>
 import { Button } from '@/components/ui/button';
 import { TableCell, TableRow } from '@/components/ui/table';
 import Tooltip from '@/plugins/Tooltip.vue';
-import { AdminRow, RowProps } from '@/types/adminTable';
+import { RowProps } from '@/types/table';
 import { router } from '@inertiajs/vue3';
 import { Trash } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
@@ -21,7 +21,14 @@ const emit = defineEmits<{
     (e: 'refresh'): void;
 }>();
 
+const isDeletableRow = (
+    row: T,
+): row is T & { id: number; deleted_at?: string | null } =>
+    typeof row === 'object' && row !== null && 'id' in row;
+
 const handleDelete = (row: T) => {
+    if (!isDeletableRow(row)) return;
+
     const targetUrl = ref(
         row.deleted_at !== null
             ? `${url}/ ${row.id}`

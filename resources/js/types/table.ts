@@ -1,6 +1,9 @@
-export interface AdminRow {
+export interface BaseRow {
     id: number;
     deleted_at?: string | null;
+    name?: string;
+    images?: { url: string }[];
+    published_at?: string | null;
 }
 
 // Column render variants your table understands
@@ -52,7 +55,8 @@ export type BodyProps<T> = {
         links: App.Data.PaginatorLinkData[];
         meta: App.Data.PaginatorMetaData;
     };
-    columns: Array<{ field: string; header: string; type?: string }>;
+    // columns: Array<{ field: string; header: string; type?: string }>;
+    columns: Column<T>[];
     label: string;
 };
 

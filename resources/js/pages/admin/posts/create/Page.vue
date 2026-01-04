@@ -18,9 +18,14 @@ import posts from '@/routes/admin/posts';
 import { useForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
+const parentTitle = 'Artículos';
 const title = 'Crear artículo';
 
 const breadcrumb = [
+    {
+        name: parentTitle,
+        href: posts.index().url,
+    },
     {
         name: title,
     },

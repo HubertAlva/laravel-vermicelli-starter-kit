@@ -1,9 +1,15 @@
 <script generic="T" lang="ts" setup>
-import { Table, TableBody, TableFooter, TableHeader, TableRow } from '@/components/admin-table';
+import {
+    Table,
+    TableBody,
+    TableFooter,
+    TableHeader,
+    TableRow,
+} from '@/components/table';
 import { Spinner } from '@/components/ui/spinner';
 import { useTableFilters } from '@/composables/useTable';
 import { cn } from '@/lib/utils';
-import { Filters, IndexTableProps } from '@/types/adminTable';
+import { Filters, IndexTableProps } from '@/types/table';
 import { Deferred } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -26,7 +32,7 @@ const { filters, refresh } = useTableFilters(props.url, initialFilters.value);
 
         <Deferred :data="deferredData">
             <template #fallback>
-                <div class="flex min-h-[660px] items-center justify-center">
+                <div class="flex min-h-[500px] items-center justify-center">
                     <Spinner class="size-8" />
                 </div>
             </template>

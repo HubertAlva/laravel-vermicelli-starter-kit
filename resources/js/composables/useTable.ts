@@ -1,4 +1,4 @@
-import { Filters } from '@/types/adminTable';
+import { Filters } from '@/types/table';
 import { router } from '@inertiajs/vue3';
 import { debounce, pickBy } from 'lodash';
 import { ref } from 'vue';

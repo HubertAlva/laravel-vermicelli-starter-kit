@@ -3,7 +3,7 @@ import { IndexTable } from '@/components/admin';
 import { Button } from '@/components/ui/button';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { create, edit, index } from '@/routes/admin/posts';
-import { Column } from '@/types/adminTable';
+import { Column } from '@/types/table';
 import { Link, router } from '@inertiajs/vue3';
 
 type DataType = App.Data.PostData;

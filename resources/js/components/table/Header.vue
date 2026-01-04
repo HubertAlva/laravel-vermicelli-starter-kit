@@ -2,7 +2,7 @@
 import { CardHeader } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { HeaderProps } from '@/types/adminTable';
+import { HeaderProps } from '@/types/table';
 import { Search } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
 

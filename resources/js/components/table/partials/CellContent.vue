@@ -1,11 +1,15 @@
-<script generic="T extends Record<string, any>" lang="ts" setup>
+<script generic="T" lang="ts" setup>
 import { Badge } from '@/components/ui/badge';
 import { truncateText } from '@/lib/utils';
-import { CellProps, Column } from '@/types/adminTable';
+import { CellProps, Column } from '@/types/table';
 import { computed } from 'vue';
 
 interface Role {
     name: string;
+}
+
+interface Image {
+    url: string;
 }
 
 const props = defineProps<CellProps<T>>();
@@ -48,6 +52,15 @@ const formattedSize = computed(() => {
     return `${(size / 1073741824).toFixed(2)} GB`;
 });
 
+const isPublished = (row: T): row is T & { published_at: string | null } =>
+    typeof row === 'object' && row !== null && 'published_at' in row;
+
+const hasImages = (row: T): row is T & { images: Image[] } =>
+    typeof row === 'object' &&
+    row !== null &&
+    'images' in row &&
+    Array.isArray((row as any).images);
+
 const isRoleArray = (value: unknown): value is Role[] => {
     return (
         Array.isArray(value) &&
@@ -68,7 +81,10 @@ const isRoleArray = (value: unknown): value is Role[] => {
         </template>
 
         <template v-else-if="column.field === 'published_at'">
-            <Badge :variant="props.row.published_at ? 'success' : 'warn'">
+            <Badge
+                v-if="isPublished(props.row)"
+                :variant="props.row.published_at ? 'success' : 'warn'"
+            >
                 {{ publishedLabel }}
             </Badge>
         </template>
@@ -95,6 +111,7 @@ const isRoleArray = (value: unknown): value is Role[] => {
 
         <template v-else-if="column.type === 'images'">
             <img
+                v-if="hasImages(props.row)"
                 :src="props.row.images[0].url"
                 alt="Thumbnail"
                 class="h-10 w-10 rounded object-cover"

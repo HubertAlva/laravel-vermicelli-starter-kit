@@ -81,7 +81,7 @@ const isNextorPrevious = (label: string) => {
                 >
                     <Button
                         :variant="item.active ? 'default' : 'outline'"
-                        class="bg-brand-primary hover:bg-brand-primary/60 h-10 w-10 cursor-pointer p-0 hover:text-white"
+                        class="h-10 w-10 cursor-pointer bg-primary p-0 hover:bg-primary/60 hover:text-white"
                     >
                         {{ item.label }}
                     </Button>
