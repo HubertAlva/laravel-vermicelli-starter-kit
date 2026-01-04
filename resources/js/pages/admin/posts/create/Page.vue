@@ -34,7 +34,7 @@ const form = useForm({
     published_at: true,
     is_new_thumbnail: false,
     delete_at: null,
-    tags: null,
+    tags: undefined,
 }).withPrecognition('post', posts.store().url);
 
 const submit = () => form.submit();
