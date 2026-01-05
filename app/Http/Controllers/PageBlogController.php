@@ -15,7 +15,7 @@ class PageBlogController extends Controller
         $posts = Post::with('tags')
             ->whereNotNull('published_at')
             ->orderBy('created_at', 'desc')
-            ->paginate(8);
+            ->paginate(12);
 
         return Inertia::render('blog/index/Page', [
             'posts' => Inertia::defer(fn() => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data')),

@@ -2,36 +2,40 @@
 import Footer from '@/layouts/app/Footer.vue';
 import Header from '@/layouts/app/Header.vue';
 import { Head } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 interface Props {
-    title: string;
-    description?: string;
-    image?: string;
+    head: {
+        title: string;
+        description?: string;
+        image?: string;
+    };
 }
 
 const defaultDescription = 'Starter Kit hecho por Hubert Alva.';
+const defaultImage = '/images/og-image.png';
 
-const {
-    title,
-    description = defaultDescription,
-    image = '/images/og-image.png',
-} = defineProps<Props>();
+const metaDescription = computed(() => head.description ?? defaultDescription);
+
+const metaImage = computed(() => head.image ?? defaultImage);
+
+const { head } = defineProps<Props>();
 </script>
 
 <template>
     <Head>
-        <title>{{ title }}</title>
+        <title>{{ head.title }}</title>
 
-        <link :href="image" rel="apple-touch-icon" />
-        <meta :content="description" name="description" />
+        <link :href="metaImage" rel="apple-touch-icon" />
+        <meta :content="metaDescription" name="description" />
 
         <meta content="website" property="og:type" />
-        <meta :content="title" property="og:site_name" />
+        <meta :content="head.title" property="og:site_name" />
 
-        <meta :content="title" property="og:title" />
-        <meta :content="description" property="og:description" />
+        <meta :content="head.title" property="og:title" />
+        <meta :content="metaDescription" property="og:description" />
 
-        <meta :content="image" property="og:image" />
+        <meta :content="metaImage" property="og:image" />
     </Head>
 
     <Header />

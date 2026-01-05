@@ -2,11 +2,13 @@
 import { Container } from '@/components/container';
 import AppLayout from '@/layouts/AppLayout.vue';
 
-const title = 'Home';
+const head = {
+    title: 'Home',
+};
 </script>
 
 <template>
-    <AppLayout :title="title">
+    <AppLayout :head="head">
         <Container>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid
             cum fuga fugit incidunt laboriosam placeat ullam. Ab adipisci animi

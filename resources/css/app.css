@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap");
+
 @import 'tailwindcss';
 
 @plugin "@tailwindcss/typography";
@@ -10,7 +12,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-sans: Instrument Sans, ui-sans-serif, system-ui, sans-serif,
+    --font-sans: Geist, ui-sans-serif, system-ui, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
 
