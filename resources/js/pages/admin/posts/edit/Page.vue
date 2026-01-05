@@ -2,10 +2,13 @@
 import PostForm from '@/components/form/PostForm.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useSoftDelete } from '@/composables/useSoftDelete';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { cn, truncateText } from '@/lib/utils';
+import Tooltip from '@/plugins/Tooltip.vue';
 import posts from '@/routes/admin/posts';
 import { useForm } from '@inertiajs/vue3';
+import { RefreshCcw, Trash } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -48,6 +51,16 @@ const publishLabel = computed(() => {
     return form.published_at ? 'Publicar' : 'Borrador';
 });
 
+const deleteTooltip = computed(() => {
+    return form.deleted_at !== null ? 'Eliminar' : 'Mover a papelera';
+});
+
+const { restore, remove } = useSoftDelete({
+    restore: (id) => posts.restore(id).url,
+    destroy: (id) => posts.destroy(id).url,
+    softDelete: (id) => posts.softDelete(id).url,
+});
+
 window.addEventListener('beforeunload', (event) => {
     if (form.isDirty) {
         event.preventDefault();
@@ -77,9 +90,44 @@ window.addEventListener('beforeunload', (event) => {
                     <Badge :variant="form.published_at ? 'success' : 'warn'">
                         {{ publishLabel }}
                     </Badge>
+
+                    <Badge
+                        v-if="form.deleted_at !== null"
+                        variant="destructive"
+                    >
+                        Eliminado el
+                        {{
+                            new Date(form.deleted_at).toLocaleDateString(
+                                'es-PE',
+                            )
+                        }}
+                    </Badge>
                 </div>
 
-                <div>
+                <div class="flex flex-wrap items-center justify-end gap-2">
+                    <Button
+                        v-if="form.deleted_at !== null"
+                        type="button"
+                        variant="secondary"
+                        @click="restore(props.post.id)"
+                    >
+                        <RefreshCcw class="mr-2 h-4 w-4" />
+                        Restaurar
+                    </Button>
+
+                    <Tooltip :text="deleteTooltip">
+                        <Button
+                            size="icon"
+                            type="button"
+                            variant="destructive"
+                            @click="
+                                remove(props.post.id, form.deleted_at !== null)
+                            "
+                        >
+                            <Trash />
+                        </Button>
+                    </Tooltip>
+
                     <Button type="submit" @click="submit">
                         {{ buttonLabel }}
                     </Button>

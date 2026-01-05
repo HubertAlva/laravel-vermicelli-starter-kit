@@ -27,13 +27,22 @@ export function truncateText(text: string, maxLength: number) {
     return text.substring(0, maxLength) + '...';
 }
 
-export function formatDate(date: string | undefined) {
+export function formatDate(date: string | undefined, format = 'long') {
     if (!date) return '';
-    return new Date(date).toLocaleDateString('es-ES', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-    });
+
+    if (format === 'long') {
+        return new Date(date).toLocaleDateString('es-PE', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        });
+    } else if (format === 'short') {
+        return new Date(date).toLocaleDateString('es-PE', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+        });
+    }
 }
 
 export function renderMarkdown(content: string) {

@@ -41,7 +41,7 @@ watch(y, (value, prevValue) => {
             )
         "
     >
-        <nav class="flex w-full max-w-7xl items-center justify-between px-5">
+        <nav class="flex w-full max-w-6xl items-center justify-between px-5">
             <Link :href="home().url">
                 <img
                     alt="Abstract"

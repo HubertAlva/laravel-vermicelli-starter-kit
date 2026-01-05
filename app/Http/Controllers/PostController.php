@@ -108,6 +108,6 @@ class PostController extends Controller
     {
         $post->restore();
 
-        return Redirect::route('admin.posts.index')->with('success', 'Artículo restaurado correctamente.');
+        return Redirect::back()->with('success', 'Artículo restaurado correctamente.');
     }
 }

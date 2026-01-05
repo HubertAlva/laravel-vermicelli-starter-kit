@@ -1,14 +1,15 @@
 <?php
 
+use App\Http\Controllers\PageBlogController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Laravel\Fortify\Features;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canRegister' => Features::enabled(Features::registration()),
-    ]);
+    return Inertia::render('home/index/Page');
 })->name('home');
+
+Route::get('blog', [PageBlogController::class, 'index'])->name('blog.index');
+Route::get('blog/{post:slug}', [PageBlogController::class, 'show'])->name('blog.show');
 
 Route::get('dashboard', function () {
     return Inertia::render('Dashboard');

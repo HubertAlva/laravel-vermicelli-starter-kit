@@ -2,7 +2,7 @@
 import { Container } from '@/components/container';
 import AppLayout from '@/layouts/AppLayout.vue';
 
-const title = 'Welcome';
+const title = 'Home';
 </script>
 
 <template>

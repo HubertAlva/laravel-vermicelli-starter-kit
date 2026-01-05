@@ -1,6 +1,7 @@
 import { home } from '@/routes';
 import admin from '@/routes/admin';
 import posts from '@/routes/admin/posts';
+import blog from '@/routes/blog';
 import { LayoutDashboard, LucideIcon, TableOfContents } from 'lucide-vue-next';
 import { ref } from 'vue';
 
@@ -21,7 +22,7 @@ export const headerNavLinks = ref<NavLink[]>([
     {
         name: 'Inicio',
         url: home().url,
-        componentRoot: '',
+        componentRoot: 'home',
     },
     {
         name: 'Nosotros',
@@ -30,7 +31,7 @@ export const headerNavLinks = ref<NavLink[]>([
     },
     {
         name: 'Blog',
-        url: home().url,
+        url: blog.index().url,
         componentRoot: 'blog',
     },
     {

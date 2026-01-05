@@ -13,7 +13,7 @@ const props = defineProps<{
         :is="props.as ?? 'section'"
         :class="
             cn(
-                'mx-auto max-w-7xl space-y-6 px-5 py-12 lg:px-4 lg:py-16',
+                'mx-auto max-w-6xl space-y-6 px-5 py-12 lg:px-4 lg:py-16',
                 props.class,
             )
         "

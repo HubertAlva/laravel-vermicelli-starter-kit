@@ -13,7 +13,7 @@ Route::middleware(['auth', 'verified', 'permission:admin.all'])
         Route::get('posts', [PostController::class, 'index'])->name('posts.index');
         Route::get('posts/create', [PostController::class, 'create'])->name('posts.create');
         Route::post('posts', [PostController::class, 'store'])->middleware('precognition')->name('posts.store');
-        Route::get('posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
+        Route::get('posts/{post}/edit', [PostController::class, 'edit'])->withTrashed()->name('posts.edit');
         Route::post('posts/{post}', [PostController::class, 'update'])->middleware('precognition')->name('posts.update');
         Route::delete('/posts/{post}', [PostController::class, 'destroy'])->withTrashed()->name('posts.destroy');
         Route::delete('posts/{post}/soft-delete', [PostController::class, 'soft_delete'])->name('posts.soft-delete');
