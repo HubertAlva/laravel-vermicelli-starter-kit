@@ -8,10 +8,14 @@ import posts from '@/routes/admin/posts';
 import { useForm } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
+const props = defineProps<{
+    post: App.Data.PostData;
+}>();
+
 const parentTitle = 'Artículos';
-const title = 'Crear artículo';
-const defaultTitle = 'Nuevo artículo';
-const buttonLabel = 'Crear';
+const title = 'Editar artículo ' + props.post.name;
+const defaultTitle = props.post.name;
+const buttonLabel = 'Guardar';
 
 const breadcrumb = [
     {
@@ -23,16 +27,18 @@ const breadcrumb = [
     },
 ];
 
+const tags = props.post.tags?.map((tag) => tag.name);
+
 const form = useForm<App.Data.FormPostData>({
-    name: undefined,
-    excerpt: undefined,
-    content: undefined,
-    thumbnail: null,
-    published_at: true,
+    name: props.post.name,
+    excerpt: props.post.excerpt,
+    content: props.post.content,
+    thumbnail: props.post.thumbnail,
+    published_at: !!props.post.published_at,
     is_new_thumbnail: false,
-    deleted_at: null,
-    tags: undefined,
-}).withPrecognition('post', posts.store().url);
+    deleted_at: props.post.deleted_at ?? null,
+    tags: tags,
+}).withPrecognition('post', posts.update(props.post.id).url);
 
 const submit = () => form.submit();
 

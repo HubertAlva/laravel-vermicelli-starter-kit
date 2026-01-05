@@ -49,7 +49,7 @@ export function removeSpaces(value: FormDataConvertible) {
     return String(value).replace(/\s/g, '');
 }
 
-export function validate(form: InertiaPrecognitiveForm<any>, delay = 300) {
+export function validate(form: InertiaPrecognitiveForm<any>, delay = 200) {
     return useDebounceFn((field: keyof typeof form.errors) => {
         form.validate(field);
     }, delay);

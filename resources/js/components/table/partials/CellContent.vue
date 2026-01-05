@@ -81,10 +81,11 @@ const isRoleArray = (value: unknown): value is Role[] => {
         </template>
 
         <template v-else-if="column.field === 'published_at'">
-            <Badge
-                v-if="isPublished(props.row)"
-                :variant="props.row.published_at ? 'success' : 'warn'"
-            >
+            <Badge v-if="isPublished(props.row)" variant="success">
+                {{ publishedLabel }}
+            </Badge>
+
+            <Badge v-else variant="warn">
                 {{ publishedLabel }}
             </Badge>
         </template>

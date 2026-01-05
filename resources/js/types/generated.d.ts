@@ -1,4 +1,14 @@
 declare namespace App.Data {
+export type FormPostData = {
+name?: string;
+excerpt?: string;
+content?: string;
+thumbnail: any | string | null;
+published_at: boolean;
+is_new_thumbnail: boolean;
+deleted_at: string | null;
+tags?: Array<any>;
+};
 export type PaginatorLinkData = {
 url?: string;
 label: string;
@@ -24,7 +34,6 @@ slug: string;
 excerpt: string;
 content: string;
 thumbnail?: string;
-additional_thumbnail?: string;
 published_at?: string;
 created_at?: string;
 updated_at?: string;

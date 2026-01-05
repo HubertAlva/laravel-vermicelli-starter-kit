@@ -22,7 +22,6 @@ class PostData extends Data
         public string            $excerpt,
         public string            $content,
         public Optional|string   $thumbnail,
-        public Optional|string   $additional_thumbnail,
         #[WithCast(DateTimeInterfaceCast::class)]
         #[WithTransformer(DateTimeInterfaceTransformer::class)]
         public Optional|DateTime $published_at,
