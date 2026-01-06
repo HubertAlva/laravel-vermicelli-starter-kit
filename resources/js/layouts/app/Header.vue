@@ -32,7 +32,7 @@ watch(y, (value, prevValue) => {
     <header
         :class="
             cn(
-                'fixed top-0 z-50 flex min-h-[60px] w-full items-center justify-center border-b bg-white transition-all duration-300 xl:min-h-[68px]',
+                'fixed top-0 z-50 flex min-h-[60px] w-full items-center justify-center border-b bg-background transition-all duration-300 xl:min-h-[68px]',
                 {
                     'border-none shadow-[0_2px_4px_1px_rgba(0,0,0,0.2)]': y > 0,
                     '-translate-y-[100%]': y > 150 && !scrollingUp,

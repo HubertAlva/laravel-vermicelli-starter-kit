@@ -5,7 +5,7 @@ const year = new Date().getFullYear();
 </script>
 
 <template>
-    <footer class="bg-neutral-950 text-white">
+    <footer class="bg-neutral-950 text-white dark:bg-neutral-900">
         <Container as="div">
             <small>
                 © {{ year }} Laravel. Todos los derechos reservados.

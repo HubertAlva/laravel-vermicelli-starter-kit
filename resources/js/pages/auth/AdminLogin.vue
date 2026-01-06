@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthBase from '@/layouts/AuthLayout.vue';
-import { home, register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 import { Form, Head } from '@inertiajs/vue3';
@@ -15,7 +14,6 @@ import { Form, Head } from '@inertiajs/vue3';
 defineProps<{
     status?: string;
     canResetPassword: boolean;
-    canRegister: boolean;
 }>();
 </script>
 
@@ -96,21 +94,6 @@ defineProps<{
                     <Spinner v-if="processing" />
                     Iniciar sesión
                 </Button>
-            </div>
-
-            <div
-                v-if="canRegister"
-                class="text-center text-sm text-muted-foreground"
-            >
-                ¿No tienes una cuenta?
-                <TextLink :href="register()" :tabindex="5">
-                    Registrate
-                </TextLink>
-            </div>
-
-            <div class="text-center text-sm text-muted-foreground">
-                Regresar al
-                <TextLink :href="home()" :tabindex="6">inicio</TextLink>
             </div>
         </Form>
     </AuthBase>

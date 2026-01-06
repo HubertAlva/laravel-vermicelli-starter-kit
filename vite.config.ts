@@ -5,6 +5,16 @@ import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+    server: {
+        host: '127.0.0.1',
+        port: 5173,
+        strictPort: true,
+        hmr: {
+            host: 'vermicelli.local',
+            protocol: 'http',
+        },
+        cors: true,
+    },
     plugins: [
         laravel({
             input: ['resources/js/app.ts'],

@@ -4,7 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PostController;
 
 Route::middleware(['auth', 'verified', 'permission:admin.all'])
-    ->prefix('admin')
+    ->domain('admin.' . config('app.app_domain'))
     ->name('admin.')
     ->group(function () {
 
@@ -20,4 +20,6 @@ Route::middleware(['auth', 'verified', 'permission:admin.all'])
         Route::post('posts/{post}/restore', [PostController::class, 'restore'])->withTrashed()->name('posts.restore');
 
         Route::post('editor/upload', [AdminController::class, 'upload'])->name('editor.upload');
+
+
     });
