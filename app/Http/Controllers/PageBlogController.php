@@ -18,7 +18,7 @@ class PageBlogController extends Controller
             ->paginate(12);
 
         return Inertia::render('blog/index/Page', [
-            'posts' => Inertia::defer(fn() => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data')),
+            'posts' => Inertia::defer(fn () => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data')),
         ]);
     }
 

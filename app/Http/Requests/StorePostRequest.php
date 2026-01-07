@@ -25,7 +25,7 @@ class StorePostRequest extends FormRequest
                 request('is_new_thumbnail') ? ['image', 'mimes:jpg,jpeg,png,webp'] : [''],
                 ['max:10240']
             ),
-            'tags' => 'required|array',
+            'tags' => 'sometimes|array',
             'tags.*' => 'string|max:255',
         ];
     }

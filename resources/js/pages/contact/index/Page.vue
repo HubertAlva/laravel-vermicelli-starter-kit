@@ -11,13 +11,18 @@ const head = {
 };
 
 const form = useForm<App.Data.SendContactData>({
-    name: 'Hubert Alva',
-    email: 'heamlv@gmail.com',
-    subject: undefined,
-    message: 'Lorem 1',
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
 }).withPrecognition(contact.store());
 
-const submit = () => form.submit();
+const submit = () =>
+    form.submit({
+        onSuccess: () => {
+            form.reset();
+        },
+    });
 </script>
 
 <template>

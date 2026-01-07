@@ -16,9 +16,7 @@ class Create
 
     public function __construct(
         private EditorContentProcessorService $contentProcessor,
-    )
-    {
-    }
+    ) {}
 
     public function execute(FormPostData $data, ?UploadedFile $thumbnail): Post
     {
@@ -42,7 +40,9 @@ class Create
 
             $post->update(['content' => $content]);
 
-            $post->attachTags($data->tags);
+            if ($data->tags) {
+                $post->attachTags($data->tags);
+            }
 
             $this->handleImageStore(
                 $post,

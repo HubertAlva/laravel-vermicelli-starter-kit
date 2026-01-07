@@ -10,7 +10,7 @@ class SentContact
 {
     public function execute(SendContactData $data): void
     {
-        $to = 'hubertalvam@gmail.com';
+        $to = config('mail.to.address');
 
         Mail::to($to)->queue(new Contact($data));
     }

@@ -1,10 +1,15 @@
 <script lang="ts" setup>
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+} from '@/components/ui/card';
 import { formatDate } from '@/lib/utils';
 import { show } from '@/routes/blog';
 import { Link } from '@inertiajs/vue3';
-import { ArrowRight } from 'lucide-vue-next';
+import { ArrowRight, Image } from 'lucide-vue-next';
 
 defineProps<{
     post: App.Data.PostData;
@@ -19,10 +24,18 @@ defineProps<{
             <CardHeader class="p-0">
                 <div class="relative aspect-video overflow-hidden">
                     <img
+                        v-if="post.thumbnail"
                         :alt="post.name"
                         :src="post.thumbnail"
                         class="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
+
+                    <div
+                        v-else
+                        class="flex h-full items-center justify-center bg-neutral-100"
+                    >
+                        <Image />
+                    </div>
                 </div>
             </CardHeader>
             <CardContent class="p-5">

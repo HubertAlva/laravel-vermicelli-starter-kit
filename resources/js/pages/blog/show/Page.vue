@@ -1,8 +1,19 @@
 <script lang="ts" setup>
 import { Container } from '@/components/container';
 import { Badge } from '@/components/ui/badge';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { formatDate, renderMarkdown } from '@/lib/utils';
+import { formatDate, renderMarkdown, truncateText } from '@/lib/utils';
+import { home } from '@/routes';
+import blog from '@/routes/blog';
+import { Link } from '@inertiajs/vue3';
 
 const props = defineProps<{
     post: App.Data.PostData;
@@ -18,6 +29,27 @@ const head = {
 <template>
     <AppLayout :head="head">
         <Container class="max-w-2xl">
+            <Breadcrumb>
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink as-child>
+                            <Link :href="home().url">Inicio</Link>
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbLink as-child>
+                            <Link :href="blog.index().url">Blog</Link>
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>
+                            {{ truncateText(head.title, 50) }}
+                        </BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
             <div class="mx-auto prose">
                 <h1>
                     {{ props.post.name }}

@@ -20,7 +20,7 @@ export function toUrl(href: NonNullable<InertiaLinkProps['href']>) {
     return typeof href === 'string' ? href : href?.url;
 }
 
-export function truncateText(text: string, maxLength: number) {
+export function truncateText(text: string, maxLength: number = 100) {
     if (text.length <= maxLength) {
         return text;
     }

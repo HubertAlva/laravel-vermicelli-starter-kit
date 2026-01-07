@@ -16,9 +16,7 @@ class Update
 
     public function __construct(
         private EditorContentProcessorService $contentProcessor,
-    )
-    {
-    }
+    ) {}
 
     public function execute(Post $post, FormPostData $data, ?UploadedFile $thumbnail): Post
     {
@@ -47,7 +45,9 @@ class Update
 
             $post->update(['content' => $newContent]);
 
-            $post->syncTags($data->tags);
+            if ($data->tags) {
+                $post->syncTags($data->tags);
+            }
 
             $this->handleImageUpdate(
                 $post,

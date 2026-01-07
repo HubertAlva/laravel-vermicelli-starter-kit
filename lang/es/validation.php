@@ -209,6 +209,12 @@ return [
         'message' => 'mensaje',
         'terms_privacy' => 'términos y condiciones',
         'prompt' => 'descripción',
+        'content' => 'contenido',
+        'subject' => 'asunto',
+        'tags' => 'etiquetas',
+        'excerpt' => 'extracto',
+        'published_at' => 'publicado',
+        'is_new_thumbnail' => 'nuevo thumbnail',
     ],
 
 ];

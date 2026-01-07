@@ -7,7 +7,7 @@ thumbnail: any | string | null;
 published_at: boolean;
 is_new_thumbnail: boolean;
 deleted_at: string | null;
-tags?: Array<any>;
+tags: Array<any> | null;
 };
 export type PaginatorLinkData = {
 url?: string;

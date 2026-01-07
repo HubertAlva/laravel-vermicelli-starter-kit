@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Admin\GetIndexData;
 use App\Actions\Post\Create;
 use App\Actions\Post\Update;
 use App\Data\FormPostData;
@@ -13,13 +14,11 @@ use App\Models\Post;
 use App\Services\ImageConversionService;
 use App\Traits\HandleMediaUploads;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\LaravelData\PaginatedDataCollection;
 use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 
 class PostController extends Controller
 {
@@ -32,17 +31,14 @@ class PostController extends Controller
         $this->conversionService = $conversionService;
     }
 
-    public function index(Request $request): Response
+    public function index(GetIndexData $action): Response
     {
-        $per_page = $request->get('per_page', 10);
-        $page = $request->get('page', 1);
-
-        $posts = QueryBuilder::for(Post::class)
-            ->defaultSort('id')
-            ->allowedFilters([
-                AllowedFilter::custom('search', new SearchFilter), AllowedFilter::trashed()])
-            ->paginate($per_page, ['*'], 'page', $page)
-            ->withQueryString();
+        $posts = $action->execute(
+            model: Post::class,
+            allowedFilters: [
+                AllowedFilter::custom('search', new SearchFilter), AllowedFilter::trashed(),
+            ],
+        );
 
         return Inertia::render('admin/posts/index/Page', [
             'posts' => Inertia::defer(fn () => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data')),
