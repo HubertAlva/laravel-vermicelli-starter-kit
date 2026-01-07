@@ -1,21 +1,23 @@
-# Laravel Starter Kit
+# Laravel Vermicelli Starter Kit
 
-A clean and opinionated Laravel starter kit designed to speed up development by providing a solid and practical
-foundation for real-world applications.
+A clean, opinionated Laravel starter kit built to speed up development and provide a solid foundation for real-world
+applications.
 
-## 🚀 What’s Included
+Built with Laravel, Inertia.js, and Vue, with a strong focus on developer experience and real-world structure.
+
+## What’s Included
 
 ### Authentication & Authorization
 
 - Role and permission system ready to use
-- Structured access control for admin features
+- Structured access control for administrative features
 
 ### Admin Panel
 
 - Dedicated admin layout
 - Admin panel served via subdomain (e.g. `admin.yourapp.com`)
 - Example CRUD implementation for a **Post** model
-- Fully working views for create, edit, list, and delete actions
+- Fully functional views for create, edit, list, and delete actions
 
 ### Layouts & Components
 
@@ -44,15 +46,12 @@ foundation for real-world applications.
 - Clean data handling approach
 - Database snapshot and restore capabilities for development and testing
 
-## 🎯 Purpose
+## Purpose
 
 This starter kit is meant to be a **starting point**, not a full framework.  
 It provides common building blocks so you can focus on building features instead of setting up the same things over and
 over again.
 
-## 📦 Best Use Cases
+## License
 
-- Admin panels
-- Content-driven applications
-- SaaS projects
-- Internal tools
+The Laravel Vermicelli Starter Kit is open-sourced software licensed under the MIT license.
