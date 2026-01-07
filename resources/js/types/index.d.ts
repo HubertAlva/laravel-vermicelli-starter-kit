@@ -3,6 +3,7 @@ import type { LucideIcon } from 'lucide-vue-next';
 
 export interface Auth {
     user: User;
+    isAdmin: boolean;
 }
 
 export interface BreadcrumbItem {
@@ -15,6 +16,7 @@ export interface NavItem {
     href: NonNullable<InertiaLinkProps['href']>;
     icon?: LucideIcon;
     isActive?: boolean;
+    componentRoot?: string;
 }
 
 export type AppPageProps<
@@ -34,6 +36,12 @@ export interface User {
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
+}
+
+export interface Toast {
+    type: 'success' | 'info' | 'warning' | 'error';
+    title?: string;
+    message: string;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

@@ -2,6 +2,7 @@ import { home } from '@/routes';
 import admin from '@/routes/admin';
 import posts from '@/routes/admin/posts';
 import blog from '@/routes/blog';
+import contact from '@/routes/contact';
 import { LayoutDashboard, LucideIcon, TableOfContents } from 'lucide-vue-next';
 import { ref } from 'vue';
 
@@ -36,7 +37,7 @@ export const headerNavLinks = ref<NavLink[]>([
     },
     {
         name: 'Contacto',
-        url: home().url,
+        url: contact.index().url,
         componentRoot: 'contact',
     },
 ]);

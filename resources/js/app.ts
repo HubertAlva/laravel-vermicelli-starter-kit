@@ -1,6 +1,7 @@
 import '../css/app.css';
 
-import { createInertiaApp } from '@inertiajs/vue3';
+import { useToast } from '@/composables/useToast';
+import { createInertiaApp, router } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
@@ -23,6 +24,14 @@ createInertiaApp({
     progress: {
         color: '#4B5563',
     },
+});
+
+router.on('flash', (event) => {
+    const toast = event.detail.flash?.toast;
+
+    if (!toast) return;
+
+    useToast().show(toast);
 });
 
 // This will set light / dark mode on page load...

@@ -1,4 +1,4 @@
-import { AppPageProps } from '@/types/index';
+import { AppPageProps, Toast } from '@/types/index';
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
@@ -15,6 +15,12 @@ declare module 'vite/client' {
 
 declare module '@inertiajs/core' {
     interface PageProps extends InertiaPageProps, AppPageProps {}
+
+    export interface InertiaConfig {
+        flashDataType: {
+            toast?: Toast;
+        };
+    }
 }
 
 declare module 'vue' {

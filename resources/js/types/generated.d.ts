@@ -40,6 +40,12 @@ updated_at?: string;
 deleted_at: string | null;
 tags: Array<App.Data.TagData> | null;
 };
+export type SendContactData = {
+name: string;
+email: string;
+subject: string | null;
+message: string;
+};
 export type TagData = {
 id: number;
 name: string;

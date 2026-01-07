@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import Footer from '@/layouts/app/Footer.vue';
 import Header from '@/layouts/app/Header.vue';
+import Notifications from '@/plugins/Notifications.vue';
 import { Head } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
@@ -40,9 +41,11 @@ const { head } = defineProps<Props>();
 
     <Header />
 
-    <main class="pt-[60px] xl:pt-[68px]">
+    <main class="pt-15 xl:pt-17">
         <slot />
     </main>
 
     <Footer />
+
+    <Notifications />
 </template>

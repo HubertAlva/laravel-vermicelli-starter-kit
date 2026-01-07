@@ -12,7 +12,7 @@ use Spatie\Tags\HasTags;
 
 class Post extends Model implements HasMedia
 {
-    use SoftDeletes, HasSlug, HasTags, InteractsWithMedia;
+    use HasSlug, HasTags, InteractsWithMedia, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -41,7 +41,7 @@ class Post extends Model implements HasMedia
     {
         $media = $this->getFirstMedia('posts_thumbnails');
 
-        if (!$media) {
+        if (! $media) {
             return null;
         }
 
@@ -72,28 +72,4 @@ class Post extends Model implements HasMedia
             ->addMediaCollection('posts_images')
             ->useDisk('posts');
     }
-
-//    public function scopeFilters($query, array $filters)
-//    {
-//        $query->when($filters['search'] ?? null, function ($query, $search) {
-//            $query->where(function ($query) use ($search) {
-//                $query->where('name', 'like', '%' . $search . '%')
-//                    ->orWhere('slug', 'like', '%' . $search . '%')
-//                    ->orWhere('excerpt', 'like', '%' . $search . '%');
-//            });
-//        });
-//
-//        if (isset($filters['only_trashed']) && filter_var($filters['only_trashed'], FILTER_VALIDATE_BOOLEAN)) {
-//            $query->onlyTrashed();
-//        }
-//    }
-
-//    public function scopeOnlyTrashed($query, $only_trashed = false)
-//    {
-//        if ($only_trashed) {
-//            return $query->onlyTrashed();
-//        }
-//
-//        return $query;
-//    }
 }

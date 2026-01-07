@@ -111,7 +111,7 @@ const validateField = validate(props.form);
                 </FieldSet>
 
                 <Field orientation="horizontal">
-                    <Spinner v-if="form.validating" />
+                    <Spinner v-if="form.validating || form.processing" />
                     <Button :disabled="form.processing" type="submit">
                         {{ buttonLabel }}
                     </Button>

@@ -44,15 +44,8 @@ class HandleInertiaRequests extends Middleware
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $request->user(),
+                'isAdmin' => $request->user()?->isAdmin(),
             ],
-            'flash' => function () use ($request) {
-                return [
-                    'success' => $request->session()->get('success'),
-                    'info' => $request->session()->get('info'),
-                    'warn' => $request->session()->get('warn'),
-                    'error' => $request->session()->get('error'),
-                ];
-            },
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }

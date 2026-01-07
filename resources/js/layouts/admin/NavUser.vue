@@ -4,15 +4,22 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
-    DropdownMenuTrigger
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
+import {
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem,
+    useSidebar,
+} from '@/components/ui/sidebar';
 import { logout } from '@/routes';
+import { edit } from '@/routes/profile';
 import { Link } from '@inertiajs/vue3';
-import { ChevronsUpDown, LogOut } from 'lucide-vue-next';
+import { ChevronsUpDown, LogOut, Settings } from 'lucide-vue-next';
 
 const props = defineProps<{
     user: {
@@ -40,7 +47,7 @@ const { isMobile } = useSidebar();
                                 :src="user.avatar"
                             />
                             <AvatarFallback class="rounded-lg">
-                                KM
+                                HA
                             </AvatarFallback>
                         </Avatar>
                         <div
@@ -87,6 +94,17 @@ const { isMobile } = useSidebar();
                             </div>
                         </div>
                     </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuGroup>
+                        <DropdownMenuItem :as-child="true">
+                            <a :href="edit().url" class="block w-full">
+                                <Settings class="mr-2 h-4 w-4" />
+                                Configuración
+                            </a>
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
+
                     <DropdownMenuSeparator />
 
                     <DropdownMenuItem asChild>

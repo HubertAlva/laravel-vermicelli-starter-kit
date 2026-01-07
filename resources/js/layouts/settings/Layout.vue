@@ -1,56 +1,64 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { toUrl, urlIsActive } from '@/lib/utils';
+import { toUrl } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit as editProfile } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
 import { edit as editPassword } from '@/routes/user-password';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 
 const sidebarNavItems: NavItem[] = [
     {
-        title: 'Profile',
+        title: 'Perfil',
         href: editProfile(),
+        componentRoot: 'settings/Profile',
     },
     {
-        title: 'Password',
+        title: 'Contraseña',
         href: editPassword(),
+        componentRoot: 'settings/Password',
     },
     {
-        title: 'Two-Factor Auth',
+        title: 'Autenticación en dos pasos',
         href: show(),
+        componentRoot: 'settings/TwoFactor',
     },
     {
-        title: 'Appearance',
+        title: 'Apariencia',
         href: editAppearance(),
+        componentRoot: 'settings/Appearance',
     },
 ];
 
-const currentPath = typeof window !== undefined ? window.location.pathname : '';
+const page = usePage();
 </script>
 
 <template>
     <div class="px-4 py-6">
         <Heading
-            title="Settings"
-            description="Manage your profile and account settings"
+            description="Administra la configuración de tu perfil y cuenta"
+            title="Configuración"
         />
 
-        <div class="flex flex-col lg:flex-row lg:space-x-12">
-            <aside class="w-full max-w-xl lg:w-48">
+        <div class="flex flex-col lg:flex-row lg:space-x-8">
+            <aside class="w-full max-w-xl lg:w-54">
                 <nav class="flex flex-col space-y-1 space-x-0">
                     <Button
                         v-for="item in sidebarNavItems"
                         :key="toUrl(item.href)"
-                        variant="ghost"
                         :class="[
                             'w-full justify-start',
-                            { 'bg-muted': urlIsActive(item.href, currentPath) },
+                            {
+                                'bg-muted': page.component.startsWith(
+                                    item.componentRoot || '',
+                                ),
+                            },
                         ]"
                         as-child
+                        variant="ghost"
                     >
                         <Link :href="item.href">
                             <component :is="item.icon" class="h-4 w-4" />

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { Head } from '@inertiajs/vue3';
 
 import AppearanceTabs from '@/components/AppearanceTabs.vue';
@@ -11,7 +11,7 @@ import { edit } from '@/routes/appearance';
 
 const breadcrumbItems: BreadcrumbItem[] = [
     {
-        title: 'Appearance settings',
+        title: 'Configuración de apariencia',
         href: edit().url,
     },
 ];
@@ -19,13 +19,13 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 <template>
     <UserLayout :breadcrumbs="breadcrumbItems">
-        <Head title="Appearance settings" />
+        <Head title="Configuración de apariencia" />
 
         <SettingsLayout>
             <div class="space-y-6">
                 <HeadingSmall
-                    title="Appearance settings"
-                    description="Update your account's appearance settings"
+                    description="Administra la configuración de apariencia de tu cuenta"
+                    title="Configuración de apariencia"
                 />
                 <AppearanceTabs />
             </div>

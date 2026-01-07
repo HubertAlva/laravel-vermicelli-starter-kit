@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import TwoFactorRecoveryCodes from '@/components/TwoFactorRecoveryCodes.vue';
 import TwoFactorSetupModal from '@/components/TwoFactorSetupModal.vue';
@@ -25,7 +25,7 @@ withDefaults(defineProps<Props>(), {
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Two-Factor Authentication',
+        title: 'Autenticación en dos pasos',
         href: show.url(),
     },
 ];
@@ -40,25 +40,25 @@ onUnmounted(() => {
 
 <template>
     <UserLayout :breadcrumbs="breadcrumbs">
-        <Head title="Two-Factor Authentication" />
+        <Head title="Autenticación en dos pasos" />
         <SettingsLayout>
             <div class="space-y-6">
                 <HeadingSmall
-                    title="Two-Factor Authentication"
-                    description="Manage your two-factor authentication settings"
+                    description="Administra la configuración de tu autenticación en dos pasos"
+                    title="Autenticación en dos pasos"
                 />
 
                 <div
                     v-if="!twoFactorEnabled"
                     class="flex flex-col items-start justify-start space-y-4"
                 >
-                    <Badge variant="destructive">Disabled</Badge>
+                    <Badge variant="destructive">Deshabilitado</Badge>
 
                     <p class="text-muted-foreground">
-                        When you enable two-factor authentication, you will be
-                        prompted for a secure pin during login. This pin can be
-                        retrieved from a TOTP-supported application on your
-                        phone.
+                        Al habilitar la autenticación en dos pasos, se te pedirá
+                        un pin seguro durante el inicio de sesión. Este pin se
+                        puede obtener de una aplicación compatible con TOTP en
+                        tu teléfono.
                     </p>
 
                     <div>
@@ -66,16 +66,16 @@ onUnmounted(() => {
                             v-if="hasSetupData"
                             @click="showSetupModal = true"
                         >
-                            <ShieldCheck />Continue Setup
+                            <ShieldCheck />Continuar configuración
                         </Button>
                         <Form
                             v-else
+                            #default="{ processing }"
                             v-bind="enable.form()"
                             @success="showSetupModal = true"
-                            #default="{ processing }"
                         >
-                            <Button type="submit" :disabled="processing">
-                                <ShieldCheck />Enable 2FA</Button
+                            <Button :disabled="processing" type="submit">
+                                <ShieldCheck />Habilitar 2FA</Button
                             ></Form
                         >
                     </div>
@@ -85,26 +85,26 @@ onUnmounted(() => {
                     v-else
                     class="flex flex-col items-start justify-start space-y-4"
                 >
-                    <Badge variant="default">Enabled</Badge>
+                    <Badge variant="default">Habilitado</Badge>
 
                     <p class="text-muted-foreground">
-                        With two-factor authentication enabled, you will be
-                        prompted for a secure, random pin during login, which
-                        you can retrieve from the TOTP-supported application on
-                        your phone.
+                        Con la autenticación en dos pasos habilitada, se te
+                        pedirá un pin seguro durante el inicio de sesión, que
+                        puedes obtener de la aplicación compatible con TOTP en
+                        tu teléfono.
                     </p>
 
                     <TwoFactorRecoveryCodes />
 
                     <div class="relative inline">
-                        <Form v-bind="disable.form()" #default="{ processing }">
+                        <Form #default="{ processing }" v-bind="disable.form()">
                             <Button
-                                variant="destructive"
-                                type="submit"
                                 :disabled="processing"
+                                type="submit"
+                                variant="destructive"
                             >
                                 <ShieldBan />
-                                Disable 2FA
+                                Deshabilitar 2FA
                             </Button>
                         </Form>
                     </div>

@@ -40,24 +40,29 @@ class PostController extends Controller
         $posts = QueryBuilder::for(Post::class)
             ->defaultSort('id')
             ->allowedFilters([
-                AllowedFilter::custom('search', new SearchFilter)
-                , AllowedFilter::trashed()])
+                AllowedFilter::custom('search', new SearchFilter), AllowedFilter::trashed()])
             ->paginate($per_page, ['*'], 'page', $page)
             ->withQueryString();
 
         return Inertia::render('admin/posts/index/Page', [
-            'posts' => Inertia::defer(fn() => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data')),
+            'posts' => Inertia::defer(fn () => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data')),
         ]);
     }
 
-    public function store(StorePostRequest $request, Create $create): RedirectResponse
+    public function store(StorePostRequest $request, Create $action): RedirectResponse
     {
-        $create->execute(
+        $action->execute(
             FormPostData::from($request->validated()),
             $request->file('thumbnail')
         );
 
-        return Redirect::route('admin.posts.index')->with('success', 'Artículo creado correctamente.');
+        Inertia::flash('toast',
+            [
+                'type' => 'success',
+                'message' => 'Artículo creado correctamente.',
+            ]);
+
+        return Redirect::route('admin.posts.index');
     }
 
     public function create(): Response
@@ -65,15 +70,21 @@ class PostController extends Controller
         return Inertia::render('admin/posts/create/Page');
     }
 
-    public function update(UpdatePostRequest $request, Update $update, Post $post): RedirectResponse
+    public function update(UpdatePostRequest $request, Update $action, Post $post): RedirectResponse
     {
-        $update->execute(
+        $action->execute(
             $post,
             FormPostData::from($request->validated()),
             $request->file('thumbnail')
         );
 
-        return Redirect::route('admin.posts.index')->with('success', 'Artículo actualizado correctamente.');
+        Inertia::flash('toast',
+            [
+                'type' => 'success',
+                'message' => 'Artículo actualizado correctamente.',
+            ]);
+
+        return Redirect::route('admin.posts.index');
     }
 
     public function edit(Post $post): Response
@@ -89,7 +100,13 @@ class PostController extends Controller
     {
         $post->forceDelete();
 
-        return Redirect::route('admin.posts.index')->with('success', 'Artículo eliminado correctamente.');
+        Inertia::flash('toast',
+            [
+                'type' => 'success',
+                'message' => 'Artículo eliminado correctamente.',
+            ]);
+
+        return Redirect::route('admin.posts.index');
     }
 
     public function soft_delete(Post $post): RedirectResponse
@@ -99,8 +116,13 @@ class PostController extends Controller
 
         $post->delete();
 
-        return Redirect::route('admin.posts.index')
-            ->with('success', 'Artículo enviado a papelera correctamente.');
+        Inertia::flash('toast',
+            [
+                'type' => 'success',
+                'message' => 'Artículo enviado a papelera correctamente.',
+            ]);
+
+        return Redirect::route('admin.posts.index');
 
     }
 
@@ -108,6 +130,12 @@ class PostController extends Controller
     {
         $post->restore();
 
-        return Redirect::back()->with('success', 'Artículo restaurado correctamente.');
+        Inertia::flash('toast',
+            [
+                'type' => 'success',
+                'message' => 'Artículo restaurado correctamente.',
+            ]);
+
+        return Redirect::back();
     }
 }
