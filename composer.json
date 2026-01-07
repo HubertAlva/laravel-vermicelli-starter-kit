@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "hubertalva/laravel-starter-kit",
+    "name": "hubertalva/laravel-vermicelli-starter-kit",
     "type": "project",
     "description": "An opinionated Laravel starter kit for building modern Inertia and Vue applications.",
     "keywords": [
