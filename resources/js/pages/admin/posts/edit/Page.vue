@@ -30,7 +30,7 @@ const breadcrumb = [
     },
 ];
 
-const tags = props.post.tags?.map((tag) => tag.name);
+const tags = props.post.tags?.map((tag) => tag.name) ?? [];
 
 const form = useForm<App.Data.FormPostData>({
     name: props.post.name,

@@ -42,6 +42,7 @@ export interface Toast {
     type: 'success' | 'info' | 'warning' | 'error';
     title?: string;
     message: string;
+    id?: number;
 }
 
 export type BreadcrumbItemType = BreadcrumbItem;

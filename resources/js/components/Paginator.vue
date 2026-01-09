@@ -69,8 +69,8 @@ const isNextorPrevious = (label: string) => {
         <PaginationContent
             class="flex flex-wrap items-center justify-center gap-1.5"
         >
-            <PaginationFirst class="cursor-pointer" />
-            <PaginationPrevious class="cursor-pointer" />
+            <PaginationFirst size="sm" />
+            <PaginationPrevious size="sm" />
 
             <template v-for="(item, index) in props.paginator.links">
                 <PaginationItem
@@ -81,15 +81,16 @@ const isNextorPrevious = (label: string) => {
                 >
                     <Button
                         :variant="item.active ? 'default' : 'outline'"
-                        class="h-10 w-10 cursor-pointer bg-primary p-0 hover:bg-primary/60 hover:text-white"
+                        class="hover:bg-primary/60 hover:text-white"
+                        size="sm"
                     >
                         {{ item.label }}
                     </Button>
                 </PaginationItem>
             </template>
 
-            <PaginationNext class="cursor-pointer" />
-            <PaginationLast class="cursor-pointer" />
+            <PaginationNext size="sm" />
+            <PaginationLast size="sm" />
         </PaginationContent>
     </Pagination>
 </template>

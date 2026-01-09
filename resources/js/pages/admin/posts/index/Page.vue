@@ -1,20 +1,31 @@
 <script lang="ts" setup>
-import { IndexTable } from '@/components/admin';
+import { CustomTable } from '@/components/table';
+import { columns } from '@/components/table/columns';
 import { Button } from '@/components/ui/button';
+import { usePrefetch } from '@/composables/usePrefetch';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { create, edit, index } from '@/routes/admin/posts';
-import { Column } from '@/types/table';
-import { Link, router } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
 
 type DataType = App.Data.PostData;
 
+type TrashedFilter = 'with' | 'only' | undefined;
+
+type Filters = {
+    search?: string;
+    trashed?: TrashedFilter;
+};
+
 const props = defineProps<{
-    posts?: {
+    posts: {
         data: DataType[];
         links: App.Data.PaginatorLinkData[];
         meta: App.Data.PaginatorMetaData;
     };
+    filters?: Filters;
 }>();
+
+const page = usePage();
 
 const title = 'Artículos';
 
@@ -26,25 +37,16 @@ const breadcrumb = [
 
 const deferredData = 'posts';
 
-const columns = [
-    { field: 'name', header: 'Nombre' },
-    { field: 'published_at', header: 'Estado' },
-    { field: 'created_at', header: 'Creado' },
-] satisfies Column<DataType>[];
-
 const url = index().url;
 const label = 'artículos';
 
-const handleRowClick = (row: DataType) => {
-    router.get(
-        edit(row.id),
-        {},
-        {
-            preserveState: true,
-            replace: true,
-        },
-    );
-};
+const { onClick, onHover, onLeave } = usePrefetch<DataType>(
+    (row) => edit(row.id),
+    {
+        delay: 75,
+        successId: page.flash.toast?.id ?? null,
+    },
+);
 </script>
 
 <template>
@@ -60,12 +62,14 @@ const handleRowClick = (row: DataType) => {
                 </div>
             </div>
 
-            <IndexTable
+            <CustomTable
                 :collection="props.posts"
                 :columns="columns"
-                :deferredData="deferredData"
+                :filters="props.filters"
                 :label="label"
-                :onRowClick="handleRowClick"
+                :onRowClick="onClick"
+                :onRowHover="onHover"
+                :onRowLeave="onLeave"
                 :url="url"
             />
         </div>

@@ -19,6 +19,7 @@ const form = useForm<App.Data.SendContactData>({
 
 const submit = () =>
     form.submit({
+        preserveState: false,
         onSuccess: () => {
             form.reset();
         },

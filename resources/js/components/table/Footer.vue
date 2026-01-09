@@ -1,20 +1,15 @@
-<script lang="ts" setup>
-import Paginator from '@/components/Paginator.vue';
+<script generic="TData, TValue" lang="ts" setup>
+import { Paginator } from '@/components/table';
 import { CardFooter } from '@/components/ui/card';
+import { useVueTable } from '@tanstack/vue-table';
 
 const props = defineProps<{
-    links: Array<App.Data.PaginatorLinkData>;
-    meta: App.Data.PaginatorMetaData;
+    table: ReturnType<typeof useVueTable<TData>>;
 }>();
 </script>
 
 <template>
     <CardFooter>
-        <Paginator
-            :paginator="{
-                links: props.links,
-                meta: props.meta,
-            }"
-        />
+        <Paginator :table="props.table" />
     </CardFooter>
 </template>

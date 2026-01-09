@@ -1,29 +1,30 @@
-<script lang="ts" setup>
+<script generic="TData, TValue" lang="ts" setup>
 import { CardHeader } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Checkbox } from '@/components/ui/checkbox'; // const { allowSoftDelete = true, initialFilters } = defineProps<HeaderProps>();
 import { Input } from '@/components/ui/input';
-import { HeaderProps } from '@/types/table';
+import { useVueTable } from '@tanstack/vue-table';
+import { debounce } from 'lodash';
 import { Search } from 'lucide-vue-next';
-import { ref, watch } from 'vue';
 
-const { allowSoftDelete = true, initialFilters } = defineProps<HeaderProps>();
-
-const emit = defineEmits<{
-    (e: 'refresh'): void;
+const props = defineProps<{
+    table: ReturnType<typeof useVueTable<TData>>;
 }>();
 
-const filters = ref(initialFilters);
+const debouncedSearch = debounce((value: string) => {
+    props.table.setGlobalFilter(value);
+}, 300);
 
-const handleShowTrashed = () => {
-    filters.value.filter.trashed =
-        filters.value.filter.trashed === 'only' ? undefined : 'only';
+function updateSearch(value: string | number) {
+    debouncedSearch(String(value));
+}
+
+const toggleTrashed = () => {
+    const column = props.table.getColumn('trashed');
+
+    column?.setFilterValue(
+        column.getFilterValue() === 'only' ? undefined : 'only',
+    );
 };
-
-watch(
-    () => filters,
-    () => emit('refresh'),
-    { deep: true },
-);
 </script>
 
 <template>
@@ -31,10 +32,11 @@ watch(
         <div class="flex flex-wrap items-center justify-between gap-4">
             <div class="relative w-full max-w-3xs items-center">
                 <Input
-                    v-model="filters.filter.search"
+                    :model-value="props.table.getState().globalFilter ?? ''"
                     class="pl-10"
                     placeholder="Buscar..."
                     type="text"
+                    @update:model-value="updateSearch"
                 />
                 <span
                     class="absolute inset-y-0 start-0 flex items-center justify-center px-2"
@@ -44,11 +46,14 @@ watch(
             </div>
 
             <div>
-                <div v-if="allowSoftDelete" class="items-top flex space-x-2">
+                <div class="items-top flex space-x-2">
                     <Checkbox
                         id="only_trashed"
-                        :model-value="filters.filter.trashed === 'only'"
-                        @update:model-value="handleShowTrashed"
+                        :model-value="
+                            table.getColumn('trashed')?.getFilterValue() ===
+                            'only'
+                        "
+                        @update:model-value="toggleTrashed"
                     />
                     <label
                         class="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

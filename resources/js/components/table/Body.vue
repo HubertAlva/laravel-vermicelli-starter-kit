@@ -1,4 +1,4 @@
-<script generic="T" lang="ts" setup>
+<script generic="TData, TValue" lang="ts" setup>
 import { CardContent } from '@/components/ui/card';
 import {
     Table,
@@ -9,12 +9,27 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { BodyProps } from '@/types/table';
+import type { ColumnDef } from '@tanstack/vue-table';
+import { FlexRender, useVueTable } from '@tanstack/vue-table';
 
-const props = defineProps<BodyProps<T>>();
+type TrashedFilter = 'with' | 'only' | undefined;
 
-defineSlots<{
-    default(props: { item: T; rowIndex: number }): any;
+type Filters = {
+    search?: string;
+    trashed?: TrashedFilter;
+};
+
+const props = defineProps<{
+    table: ReturnType<typeof useVueTable<TData>>;
+    columns: ColumnDef<TData, TValue>[];
+    links?: App.Data.PaginatorLinkData[];
+    meta?: App.Data.PaginatorMetaData;
+    url: string;
+    label: string;
+    filters?: Filters;
+    onRowClick?: (row: TData) => void;
+    onRowHover?: (row: TData) => void;
+    onRowLeave?: () => void;
 }>();
 </script>
 
@@ -24,39 +39,61 @@ defineSlots<{
             <TableCaption>
                 <div class="flex flex-wrap items-center justify-between gap-3">
                     <span>
-                        Mostrando {{ props.collection.meta.from }} al
-                        {{ props.collection.meta.to }} de
-                        {{ props.collection.meta.total }}
+                        Mostrando {{ props.meta?.from }} al
+                        {{ props.meta?.to }} de
+                        {{ props.meta?.total }}
                         {{ props.label }}
                     </span>
                     <span>Lista de {{ props.label }}.</span>
                 </div>
             </TableCaption>
+
             <TableHeader>
-                <TableRow>
+                <TableRow
+                    v-for="headerGroup in table.getHeaderGroups()"
+                    :key="headerGroup.id"
+                >
                     <TableHead
-                        v-for="(column, index) in props.columns"
-                        :key="column.field"
-                        :class="
-                            index === columns.length - 1 ? 'text-right' : ''
-                        "
+                        v-for="header in headerGroup.headers"
+                        :key="header.id"
                     >
-                        {{ column.header }}
+                        <FlexRender
+                            v-if="!header.isPlaceholder"
+                            :props="header.getContext()"
+                            :render="header.column.columnDef.header"
+                        />
                     </TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
-                <template v-if="props.collection.data.length">
-                    <template
-                        v-for="(item, rowIndex) in collection.data"
-                        :key="rowIndex"
+                <template v-if="table.getRowModel().rows?.length">
+                    <TableRow
+                        v-for="row in table.getRowModel().rows"
+                        :key="row.id"
+                        :data-state="
+                            row.getIsSelected() ? 'selected' : undefined
+                        "
+                        @click="props.onRowClick?.(row.original)"
+                        @mouseleave="props.onRowLeave?.()"
+                        @mouseover="props.onRowHover?.(row.original)"
                     >
-                        <slot :item="item" :rowIndex="rowIndex" />
-                    </template>
+                        <TableCell
+                            v-for="cell in row.getVisibleCells()"
+                            :key="cell.id"
+                        >
+                            <FlexRender
+                                :props="cell.getContext()"
+                                :render="cell.column.columnDef.cell"
+                            />
+                        </TableCell>
+                    </TableRow>
                 </template>
                 <template v-else>
                     <TableRow>
-                        <TableCell class="text-center" colspan="100%">
+                        <TableCell
+                            :colspan="columns.length"
+                            class="h-24 text-center"
+                        >
                             No se encontraron {{ props.label }}.
                         </TableCell>
                     </TableRow>
