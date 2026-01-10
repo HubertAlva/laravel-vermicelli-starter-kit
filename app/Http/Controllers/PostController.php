@@ -125,7 +125,6 @@ class PostController extends Controller
             ]);
 
         return Redirect::route('admin.posts.index');
-
     }
 
     public function restore(Post $post): RedirectResponse

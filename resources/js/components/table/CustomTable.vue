@@ -1,15 +1,7 @@
 <script generic="TData, TValue" lang="ts" setup>
 import { Paginator, TableHeader as Header } from '@/components/table';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { router } from '@inertiajs/vue3';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table';
@@ -69,6 +61,7 @@ const table = useVueTable({
             trashed: false,
         },
     },
+    autoResetPageIndex: true,
 
     onGlobalFilterChange: (updater) => {
         const current = table.getState().globalFilter;
@@ -86,7 +79,7 @@ const table = useVueTable({
                 page: 1,
                 filter: {
                     search: next || undefined,
-                    trashed: trashed,
+                    trashed: trashed || undefined,
                 },
             },
             {
@@ -96,17 +89,28 @@ const table = useVueTable({
         );
     },
 
-    autoResetPageIndex: true,
-
     onPaginationChange: (updater) => {
         const current = table.getState().pagination;
 
         const next = typeof updater === 'function' ? updater(current) : updater;
 
+        if (next.pageIndex === current.pageIndex) {
+            return;
+        }
+
+        const trashed = table
+            .getState()
+            .columnFilters.find((f) => f.id === 'trashed')
+            ?.value as TrashedFilter;
+
         router.get(
             props.url,
             {
                 page: next.pageIndex + 1,
+                filter: {
+                    search: table.getState().globalFilter || undefined,
+                    trashed: trashed || undefined,
+                },
             },
             {
                 preserveScroll: true,
@@ -116,6 +120,7 @@ const table = useVueTable({
 
     onColumnFiltersChange: (updater) => {
         const current = table.getState().columnFilters;
+
         const next = typeof updater === 'function' ? updater(current) : updater;
 
         const trashed = next.find((f) => f.id === 'trashed')
