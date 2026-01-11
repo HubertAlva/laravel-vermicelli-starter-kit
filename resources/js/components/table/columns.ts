@@ -56,7 +56,7 @@ export const columns: ColumnDef<App.Data.PostData>[] = [
                 { class: 'flex justify-end items-center' },
                 h(DeleteButton, {
                     modelId,
-                    onDelete: () => deleteModel(model),
+                    onDelete: () => deleteModel(model, 'posts'),
                 }),
             );
         },

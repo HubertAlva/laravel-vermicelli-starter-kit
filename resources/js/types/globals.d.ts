@@ -16,9 +16,23 @@ declare module 'vite/client' {
 declare module '@inertiajs/core' {
     interface PageProps extends InertiaPageProps, AppPageProps {}
 
+    export type PaginatorMeta = {
+        current_page: number;
+    };
+
+    export type PaginatedProp<T = unknown> = {
+        data: T[];
+        meta: PaginatorMeta;
+    };
+
     export interface InertiaConfig {
         flashDataType: {
             toast?: Toast;
+        };
+
+        // This may cause problems
+        sharedPageProps: {
+            [key: string]: PaginatedProp;
         };
     }
 }

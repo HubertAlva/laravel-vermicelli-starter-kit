@@ -61,7 +61,7 @@ const table = useVueTable({
             trashed: false,
         },
     },
-    autoResetPageIndex: true,
+    autoResetPageIndex: false,
 
     onGlobalFilterChange: (updater) => {
         const current = table.getState().globalFilter;
@@ -136,7 +136,6 @@ const table = useVueTable({
                 },
             },
             {
-                replace: true,
                 preserveScroll: true,
             },
         );

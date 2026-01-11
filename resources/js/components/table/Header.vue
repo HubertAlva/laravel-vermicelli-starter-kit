@@ -3,8 +3,10 @@ import { CardHeader } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox'; // const { allowSoftDelete = true, initialFilters } = defineProps<HeaderProps>();
 import { Input } from '@/components/ui/input';
 import { useVueTable } from '@tanstack/vue-table';
+import { useFocus } from '@vueuse/core';
 import { debounce } from 'lodash';
 import { Search } from 'lucide-vue-next';
+import { shallowRef } from 'vue';
 
 const props = defineProps<{
     table: ReturnType<typeof useVueTable<TData>>;
@@ -25,6 +27,9 @@ const toggleTrashed = () => {
         column.getFilterValue() === 'only' ? undefined : 'only',
     );
 };
+
+const inputRef = shallowRef();
+useFocus(inputRef, { initialValue: true });
 </script>
 
 <template>
@@ -32,6 +37,7 @@ const toggleTrashed = () => {
         <div class="flex flex-wrap items-center justify-between gap-4">
             <div class="relative w-full max-w-3xs items-center">
                 <Input
+                    ref="inputRef"
                     :model-value="props.table.getState().globalFilter ?? ''"
                     class="pl-10"
                     placeholder="Buscar..."

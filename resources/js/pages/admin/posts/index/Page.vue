@@ -35,7 +35,7 @@ const breadcrumb = [
     },
 ];
 
-const deferredData = 'posts';
+// const deferredData = 'posts';
 
 const url = index().url;
 const label = 'artículos';

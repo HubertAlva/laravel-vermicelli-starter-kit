@@ -102,17 +102,26 @@ class PostController extends Controller
     {
         $post->forceDelete();
 
+        $currentPage = request('currentPage');
+        $trashed = request('trashed');
+
         Inertia::flash('toast',
             [
                 'type' => 'success',
                 'message' => 'Artículo eliminado correctamente.',
             ]);
 
-        return Redirect::route('admin.posts.index');
+        return Redirect::route('admin.posts.index', [
+            'page' => $currentPage,
+            'filter' => $trashed ? [
+                'trashed' => $trashed,
+            ] : null,
+        ]);
     }
 
-    public function soft_delete(Post $post): RedirectResponse
+    public function soft_delete(Post $post)
     {
+        $currentPage = request('currentPage');
         $post->published_at = null;
         $post->save();
 
@@ -124,7 +133,9 @@ class PostController extends Controller
                 'message' => 'Artículo enviado a papelera correctamente.',
             ]);
 
-        return Redirect::route('admin.posts.index');
+        return Redirect::route('admin.posts.index', [
+            'page' => $currentPage,
+        ]);
     }
 
     public function restore(Post $post): RedirectResponse
