@@ -1,11 +1,9 @@
-<script generic="TData, TValue" lang="ts" setup>
+<script generic="TData" lang="ts" setup>
 import { Paginator } from '@/components/table';
 import { CardFooter } from '@/components/ui/card';
-import { useVueTable } from '@tanstack/vue-table';
+import { BaseProps } from '@/table/types';
 
-const props = defineProps<{
-    table: ReturnType<typeof useVueTable<TData>>;
-}>();
+const props = defineProps<BaseProps<TData>>();
 </script>
 
 <template>

@@ -1,68 +1,140 @@
-<!--<script generic="T" lang="ts" setup>-->
-<!--import {-->
-<!--    Table,-->
-<!--    TableBody,-->
-<!--    TableFooter,-->
-<!--    TableHeader,-->
-<!--    TableRow,-->
-<!--} from '@/components/table';-->
-<!--import { Spinner } from '@/components/ui/spinner';-->
-<!--import { useTableFilters } from '@/composables/useTable';-->
-<!--import { cn } from '@/lib/utils';-->
-<!--import { Filters, IndexTableProps } from '@/types/table';-->
-<!--import { Deferred } from '@inertiajs/vue3';-->
-<!--import { ref } from 'vue';-->
+<script generic="TData, TValue" lang="ts" setup>
+import { Table, TableBody, TableFooter, TableHeader } from '@/components/table';
+import { IndexTableProps, TrashedFilter } from '@/table/types';
+import { router } from '@inertiajs/vue3';
+import { getCoreRowModel, useVueTable } from '@tanstack/vue-table';
 
-<!--const props = defineProps<IndexTableProps<T>>();-->
+const props = defineProps<IndexTableProps<TData, TValue>>();
 
-<!--const initialFilters = ref<Filters>({-->
-<!--    page: 1,-->
-<!--    filter: {-->
-<!--        search: undefined,-->
-<!--        trashed: undefined,-->
-<!--    },-->
-<!--});-->
+const table = useVueTable({
+    get data() {
+        return props.collection.data;
+    },
+    get columns() {
+        return props.columns;
+    },
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    manualFiltering: true,
+    pageCount: props.collection.meta.last_page,
+    rowCount: props.collection.meta.total,
+    state: {
+        pagination: {
+            pageIndex: props.collection.meta.current_page - 1,
+            pageSize: props.collection.meta.per_page,
+        },
 
-<!--const { filters, refresh } = useTableFilters(props.url, initialFilters.value);-->
-<!--</script>-->
+        globalFilter: props.filters?.search ?? '',
 
-<!--<template>-->
-<!--    <Table>-->
-<!--        <TableHeader :initialFilters="filters" @refresh="refresh" />-->
+        columnFilters: [
+            {
+                id: 'trashed',
+                value: props.filters?.trashed as TrashedFilter,
+            },
+        ],
+    },
 
-<!--        <Deferred :data="deferredData">-->
-<!--            <template #fallback>-->
-<!--                <div class="flex min-h-[500px] items-center justify-center">-->
-<!--                    <Spinner class="size-8" />-->
-<!--                </div>-->
-<!--            </template>-->
+    initialState: {
+        columnVisibility: {
+            trashed: false,
+        },
+    },
+    autoResetPageIndex: false,
 
-<!--            <template v-if="props.collection">-->
-<!--                <TableBody-->
-<!--                    :collection="props.collection"-->
-<!--                    :columns="props.columns"-->
-<!--                    :label="props.label"-->
-<!--                >-->
-<!--                    <template #default="{ item }">-->
-<!--                        <TableRow-->
-<!--                            :class="-->
-<!--                                cn(props.onRowClick ? 'cursor-pointer' : '')-->
-<!--                            "-->
-<!--                            :columns="props.columns"-->
-<!--                            :filters="filters"-->
-<!--                            :item="item"-->
-<!--                            :url="props.url"-->
-<!--                            @click="props.onRowClick?.(item)"-->
-<!--                            @refresh="refresh"-->
-<!--                        />-->
-<!--                    </template>-->
-<!--                </TableBody>-->
+    onGlobalFilterChange: (updater) => {
+        const current = table.getState().globalFilter;
 
-<!--                <TableFooter-->
-<!--                    :links="props.collection.links"-->
-<!--                    :meta="props.collection.meta"-->
-<!--                />-->
-<!--            </template>-->
-<!--        </Deferred>-->
-<!--    </Table>-->
-<!--</template>-->
+        const next = typeof updater === 'function' ? updater(current) : updater;
+
+        const trashed = table
+            .getState()
+            .columnFilters.find((f) => f.id === 'trashed')
+            ?.value as TrashedFilter;
+
+        router.get(
+            props.url,
+            {
+                page: 1,
+                filter: {
+                    search: next || undefined,
+                    trashed: trashed || undefined,
+                },
+            },
+            {
+                preserveScroll: true,
+                replace: true,
+            },
+        );
+    },
+
+    onPaginationChange: (updater) => {
+        const current = table.getState().pagination;
+
+        const next = typeof updater === 'function' ? updater(current) : updater;
+
+        if (next.pageIndex === current.pageIndex) {
+            return;
+        }
+
+        const trashed = table
+            .getState()
+            .columnFilters.find((f) => f.id === 'trashed')
+            ?.value as TrashedFilter;
+
+        router.get(
+            props.url,
+            {
+                page: next.pageIndex + 1,
+                filter: {
+                    search: table.getState().globalFilter || undefined,
+                    trashed: trashed || undefined,
+                },
+            },
+            {
+                preserveScroll: true,
+            },
+        );
+    },
+
+    onColumnFiltersChange: (updater) => {
+        const current = table.getState().columnFilters;
+
+        const next = typeof updater === 'function' ? updater(current) : updater;
+
+        const trashed = next.find((f) => f.id === 'trashed')
+            ?.value as TrashedFilter;
+
+        router.get(
+            props.url,
+            {
+                page: 1,
+                filter: {
+                    search: table.getState().globalFilter || undefined,
+                    trashed,
+                },
+            },
+            {
+                preserveScroll: true,
+            },
+        );
+    },
+});
+</script>
+
+<template>
+    <Table>
+        <TableHeader :table="table" />
+
+        <TableBody
+            :columns="columns"
+            :label="props.label"
+            :meta="props.collection.meta"
+            :onRowClick="onRowClick"
+            :onRowHover="onRowHover"
+            :onRowLeave="onRowLeave"
+            :table="table"
+        />
+
+        <TableFooter :table="table" />
+    </Table>
+</template>

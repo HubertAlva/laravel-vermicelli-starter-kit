@@ -10,12 +10,10 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from '@/components/ui/pagination';
-import { useVueTable } from '@tanstack/vue-table';
+import { BaseProps } from '@/table/types';
 import { computed } from 'vue';
 
-const props = defineProps<{
-    table: ReturnType<typeof useVueTable<TData>>;
-}>();
+const props = defineProps<BaseProps<TData>>();
 
 const pagination = computed(() => props.table.getState().pagination);
 const pageCount = props.table.getPageCount();

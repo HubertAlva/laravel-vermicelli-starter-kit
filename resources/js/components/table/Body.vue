@@ -9,28 +9,10 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import type { ColumnDef } from '@tanstack/vue-table';
-import { FlexRender, useVueTable } from '@tanstack/vue-table';
+import { BodyProps } from '@/table/types';
+import { FlexRender } from '@tanstack/vue-table';
 
-type TrashedFilter = 'with' | 'only' | undefined;
-
-type Filters = {
-    search?: string;
-    trashed?: TrashedFilter;
-};
-
-const props = defineProps<{
-    table: ReturnType<typeof useVueTable<TData>>;
-    columns: ColumnDef<TData, TValue>[];
-    links?: App.Data.PaginatorLinkData[];
-    meta?: App.Data.PaginatorMetaData;
-    url: string;
-    label: string;
-    filters?: Filters;
-    onRowClick?: (row: TData) => void;
-    onRowHover?: (row: TData) => void;
-    onRowLeave?: () => void;
-}>();
+const props = defineProps<BodyProps<TData, TValue>>();
 </script>
 
 <template>
@@ -39,9 +21,9 @@ const props = defineProps<{
             <TableCaption>
                 <div class="flex flex-wrap items-center justify-between gap-3">
                     <span>
-                        Mostrando {{ props.meta?.from }} al
-                        {{ props.meta?.to }} de
-                        {{ props.meta?.total }}
+                        Mostrando {{ props.meta.from }} al
+                        {{ props.meta.to }} de
+                        {{ props.meta.total }}
                         {{ props.label }}
                     </span>
                     <span>Lista de {{ props.label }}.</span>

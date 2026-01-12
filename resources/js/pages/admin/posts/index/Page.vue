@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { CustomTable } from '@/components/table';
-import { columns } from '@/components/table/columns';
+import { IndexTable } from '@/components/admin';
 import { Button } from '@/components/ui/button';
 import { usePrefetch } from '@/composables/usePrefetch';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { create, edit, index } from '@/routes/admin/posts';
+import { columns } from '@/table/columns/postColumns';
 import { Link, usePage } from '@inertiajs/vue3';
 
 type DataType = App.Data.PostData;
@@ -62,7 +62,7 @@ const { onClick, onHover, onLeave } = usePrefetch<DataType>(
                 </div>
             </div>
 
-            <CustomTable
+            <IndexTable
                 :collection="props.posts"
                 :columns="columns"
                 :filters="props.filters"

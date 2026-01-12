@@ -41,7 +41,7 @@ class PostController extends Controller
         );
 
         return Inertia::render('admin/posts/index/Page', [
-            //            'posts' => Inertia::defer(fn () => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data')),
+//            'posts' => Inertia::defer(fn() => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data')),
             'posts' => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data'),
             'filters' => [
                 'search' => request('filter.search'),
@@ -109,6 +109,7 @@ class PostController extends Controller
             [
                 'type' => 'success',
                 'message' => 'Artículo eliminado correctamente.',
+                'id' => $post->id,
             ]);
 
         return Redirect::route('admin.posts.index', [
@@ -131,6 +132,7 @@ class PostController extends Controller
             [
                 'type' => 'success',
                 'message' => 'Artículo enviado a papelera correctamente.',
+                'id' => $post->id,
             ]);
 
         return Redirect::route('admin.posts.index', [

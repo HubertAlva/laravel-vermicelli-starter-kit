@@ -1,8 +1,8 @@
-import { useDeleteAction } from '@/components/table/composables/useDeleteAction';
-import DeleteButton from '@/components/table/DeleteButton.vue';
-import { formatDate } from '@/components/table/helpers/formatDate';
-import { statusBadge } from '@/components/table/helpers/statusBadge';
+import { DeleteButton } from '@/components/table';
 import { destroy, softDelete } from '@/routes/admin/posts';
+import { useDeleteAction } from '@/table/composables/useDeleteAction';
+import { formatDate } from '@/table/helpers/formatDate';
+import { statusBadge } from '@/table/helpers/statusBadge';
 import type { ColumnDef } from '@tanstack/vue-table';
 import { h } from 'vue';
 
