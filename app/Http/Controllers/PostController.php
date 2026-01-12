@@ -119,7 +119,7 @@ class PostController extends Controller
         ]);
     }
 
-    public function soft_delete(Post $post)
+    public function soft_delete(Post $post): RedirectResponse
     {
         $currentPage = request('currentPage');
         $post->published_at = null;
