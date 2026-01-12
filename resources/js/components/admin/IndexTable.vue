@@ -18,6 +18,7 @@ const table = useVueTable({
     manualFiltering: true,
     pageCount: props.collection.meta.last_page,
     rowCount: props.collection.meta.total,
+    autoResetPageIndex: false,
     state: {
         pagination: {
             pageIndex: props.collection.meta.current_page - 1,
@@ -39,8 +40,6 @@ const table = useVueTable({
             trashed: false,
         },
     },
-    autoResetPageIndex: false,
-
     onGlobalFilterChange: (updater) => {
         const current = table.getState().globalFilter;
 
