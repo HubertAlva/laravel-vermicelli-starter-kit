@@ -41,8 +41,7 @@ class PostController extends Controller
         );
 
         return Inertia::render('admin/posts/index/Page', [
-//            'posts' => Inertia::defer(fn() => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data')),
-            'posts' => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data'),
+            'posts' => Inertia::defer(fn() => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data')),
             'filters' => [
                 'search' => request('filter.search'),
                 'trashed' => request('filter.trashed'),

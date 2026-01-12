@@ -17,7 +17,7 @@ type Filters = {
 };
 
 const props = defineProps<{
-    posts: {
+    posts?: {
         data: DataType[];
         links: App.Data.PaginatorLinkData[];
         meta: App.Data.PaginatorMetaData;
@@ -35,8 +35,7 @@ const breadcrumb = [
     },
 ];
 
-// const deferredData = 'posts';
-
+const deferredData = 'posts';
 const url = index().url;
 const label = 'artículos';
 
@@ -65,6 +64,7 @@ const { onClick, onHover, onLeave } = usePrefetch<DataType>(
             <IndexTable
                 :collection="props.posts"
                 :columns="columns"
+                :deferredData="deferredData"
                 :filters="props.filters"
                 :label="label"
                 :onRowClick="onClick"

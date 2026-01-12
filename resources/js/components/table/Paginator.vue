@@ -70,7 +70,6 @@ const displayedPages = computed<(number | 'ellipsis')[]>(() => {
         :sibling-count="1"
         :total="props.table.getRowCount()"
         show-edges
-        @update:page="(page) => props.table.setPageIndex(page - 1)"
     >
         <PaginationContent
             class="flex flex-wrap items-center justify-center gap-1.5"

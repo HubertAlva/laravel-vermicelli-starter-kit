@@ -1,28 +1,32 @@
 <script generic="TData, TValue" lang="ts" setup>
 import { Table, TableBody, TableFooter, TableHeader } from '@/components/table';
+import { Spinner } from '@/components/ui/spinner';
 import { IndexTableProps, TrashedFilter } from '@/table/types';
-import { router } from '@inertiajs/vue3';
+import { Deferred, router } from '@inertiajs/vue3';
 import { getCoreRowModel, useVueTable } from '@tanstack/vue-table';
+import { ref, shallowRef, watch } from 'vue';
 
 const props = defineProps<IndexTableProps<TData, TValue>>();
 
+const dataRef = shallowRef<TData[]>(props.collection?.data ?? []);
+
+const pagination = ref({
+    pageIndex: 0,
+    pageSize: 10,
+});
+
 const table = useVueTable({
-    get data() {
-        return props.collection.data;
-    },
+    data: dataRef,
     get columns() {
         return props.columns;
     },
     getCoreRowModel: getCoreRowModel(),
     manualPagination: true,
     manualFiltering: true,
-    pageCount: props.collection.meta.last_page,
-    rowCount: props.collection.meta.total,
     autoResetPageIndex: false,
     state: {
-        pagination: {
-            pageIndex: props.collection.meta.current_page - 1,
-            pageSize: props.collection.meta.per_page,
+        get pagination() {
+            return pagination.value;
         },
 
         globalFilter: props.filters?.search ?? '',
@@ -67,13 +71,14 @@ const table = useVueTable({
     },
 
     onPaginationChange: (updater) => {
-        const current = table.getState().pagination;
+        const next =
+            typeof updater === 'function' ? updater(pagination.value) : updater;
 
-        const next = typeof updater === 'function' ? updater(current) : updater;
-
-        if (next.pageIndex === current.pageIndex) {
+        if (next.pageIndex === pagination.value.pageIndex) {
             return;
         }
+
+        pagination.value = next;
 
         const trashed = table
             .getState()
@@ -118,22 +123,52 @@ const table = useVueTable({
         );
     },
 });
+
+watch(
+    () => props.collection,
+    (val) => {
+        if (!val) return;
+
+        dataRef.value = val.data;
+
+        pagination.value = {
+            pageIndex: val.meta.current_page - 1,
+            pageSize: val.meta.per_page,
+        };
+
+        table.setOptions((prev) => ({
+            ...prev,
+            pageCount: val.meta.last_page,
+            rowCount: val.meta.total,
+        }));
+    },
+    { immediate: true },
+);
 </script>
 
 <template>
     <Table>
         <TableHeader :table="table" />
 
-        <TableBody
-            :columns="columns"
-            :label="props.label"
-            :meta="props.collection.meta"
-            :onRowClick="onRowClick"
-            :onRowHover="onRowHover"
-            :onRowLeave="onRowLeave"
-            :table="table"
-        />
+        <Deferred :data="props.deferredData">
+            <template #fallback>
+                <div class="flex h-48 items-center justify-center">
+                    <Spinner class="size-11" />
+                </div>
+            </template>
 
-        <TableFooter :table="table" />
+            <TableBody
+                v-if="props.collection"
+                :columns="columns"
+                :label="props.label"
+                :meta="props.collection.meta"
+                :onRowClick="onRowClick"
+                :onRowHover="onRowHover"
+                :onRowLeave="onRowLeave"
+                :table="table"
+            />
+
+            <TableFooter :table="table" />
+        </Deferred>
     </Table>
 </template>

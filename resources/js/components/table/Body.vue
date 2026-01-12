@@ -1,14 +1,7 @@
 <script generic="TData, TValue" lang="ts" setup>
 import { CardContent } from '@/components/ui/card';
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
 import { BodyProps } from '@/table/types';
 import { FlexRender } from '@tanstack/vue-table';
 
@@ -52,6 +45,7 @@ const props = defineProps<BodyProps<TData, TValue>>();
                     <TableRow
                         v-for="row in table.getRowModel().rows"
                         :key="row.id"
+                        :class="cn(onRowClick ? 'cursor-pointer' : '')"
                         :data-state="
                             row.getIsSelected() ? 'selected' : undefined
                         "

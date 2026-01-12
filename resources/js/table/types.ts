@@ -28,7 +28,7 @@ export type BodyProps<TData, TValue> = {
 // Index Table props
 export type IndexTableProps<TData, TValue> = {
     columns: ColumnDef<TData, TValue>[];
-    collection: {
+    collection?: {
         data: TData[];
         links: App.Data.PaginatorLinkData[];
         meta: App.Data.PaginatorMetaData;
@@ -39,4 +39,5 @@ export type IndexTableProps<TData, TValue> = {
     onRowClick?: (row: TData) => void;
     onRowHover?: (row: TData) => void;
     onRowLeave?: () => void;
+    deferredData: string;
 };
