@@ -1,6 +1,14 @@
 <script generic="TData, TValue" lang="ts" setup>
 import { CardContent } from '@/components/ui/card';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import { BodyProps } from '@/table/types';
 import { FlexRender } from '@tanstack/vue-table';
