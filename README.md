@@ -88,6 +88,8 @@ Both domains should resolve to:
 
 If one of the domains shows a 404 or loads the wrong site, this is usually the cause.
 
+> [Example on Ubuntu with Apache](/config-domain-example.md)
+
 ### 6. Start the Development Server
 
 ```bash
@@ -99,8 +101,8 @@ Your application will be available at:
 - http://yourdomain.local
 - http://admin.yourdomain.local
 
-  > Vermicelli uses subdomains for the admin panel by default. Configuring a local domain early helps ensure
-  authentication, sessions, and cookies work correctly across subdomains.
+> Vermicelli uses subdomains for the admin panel by default. Configuring a local domain early helps ensure
+> authentication, sessions, and cookies work correctly across subdomains.
 
 ## What’s Included
 
@@ -136,7 +138,7 @@ Your application will be available at:
 
 ### Localization
 
-- Spanish localization included by default
+- Spanish localization is included by default
 
 ### Data & Structure
 
