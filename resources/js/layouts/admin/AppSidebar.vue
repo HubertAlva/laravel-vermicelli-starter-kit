@@ -11,7 +11,6 @@ import AdditionalLinks from './AdditionalLinks.vue';
 import NavMain from './NavMain.vue';
 import NavUser from './NavUser.vue';
 
-import AppearanceTabs from '@/components/AppearanceTabs.vue';
 import { adminNavLinks } from '@/lib/navLinks';
 import admin from '@/routes/admin';
 import { Link, usePage } from '@inertiajs/vue3';
@@ -65,9 +64,6 @@ const data = {
             <AdditionalLinks :additionals="data.additionals" />
         </SidebarContent>
         <SidebarFooter>
-            <div>
-                <AppearanceTabs mode="select" />
-            </div>
             <NavUser :user="data.user" />
         </SidebarFooter>
         <SidebarRail />

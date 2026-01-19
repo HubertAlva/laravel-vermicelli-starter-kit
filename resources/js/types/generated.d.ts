@@ -43,7 +43,7 @@ tags: Array<App.Data.TagData> | null;
 export type SendContactData = {
 name: string;
 email: string;
-subject: string | null;
+subject?: string;
 message: string;
 };
 export type TagData = {

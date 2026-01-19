@@ -1,18 +1,15 @@
 <script lang="ts" setup>
+import ThemeSwitcher from '@/components/ThemeSwitcher.vue';
 import {
     Breadcrumb,
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbPage,
-    BreadcrumbSeparator,
+    BreadcrumbSeparator
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
-import {
-    SidebarInset,
-    SidebarProvider,
-    SidebarTrigger,
-} from '@/components/ui/sidebar';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import AppSidebar from '@/layouts/admin/AppSidebar.vue';
 import { truncateText } from '@/lib/utils';
 import Notifications from '@/plugins/Notifications.vue';
@@ -42,7 +39,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
         <AppSidebar />
         <SidebarInset>
             <header
-                class="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
+                class="flex h-16 shrink-0 flex-wrap items-center justify-between gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12"
             >
                 <div class="flex items-center gap-2 px-4">
                     <SidebarTrigger class="-ml-1" />
@@ -88,6 +85,10 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
                             </template>
                         </BreadcrumbList>
                     </Breadcrumb>
+                </div>
+
+                <div class="px-4">
+                    <ThemeSwitcher />
                 </div>
             </header>
             <div

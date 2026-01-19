@@ -16,6 +16,8 @@ import { useWindowScroll } from '@vueuse/core';
 import { Menu } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
 
+const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+
 const { y } = useWindowScroll();
 const previousScroll = ref(0);
 const scrollingUp = ref(false);
@@ -32,11 +34,11 @@ watch(y, (value, prevValue) => {
     <header
         :class="
             cn(
-                'fixed top-0 z-50 flex min-h-[60px] w-full items-center justify-center border-b bg-background transition-all duration-300 xl:min-h-[68px]',
+                'fixed top-0 z-50 flex min-h-15 w-full items-center justify-center border-b bg-background transition-all duration-300 xl:min-h-17',
                 {
                     'border-none shadow-[0_2px_4px_1px_rgba(0,0,0,0.2)]': y > 0,
-                    '-translate-y-[100%]': y > 150 && !scrollingUp,
-                    '-translate-y-0': scrollingUp,
+                    '-translate-y-full': y > 150 && !scrollingUp,
+                    'translate-y-0': scrollingUp,
                 },
             )
         "
@@ -44,8 +46,8 @@ watch(y, (value, prevValue) => {
         <nav class="flex w-full max-w-6xl items-center justify-between px-5">
             <Link :href="home().url">
                 <img
-                    alt="Abstract"
-                    class="max-w-28 md:max-w-[150px]"
+                    :alt="appName"
+                    class="max-w-28 md:max-w-37.5"
                     src="/images/logo.png"
                 />
             </Link>
@@ -97,7 +99,8 @@ watch(y, (value, prevValue) => {
                                                     cn(
                                                         'flex min-h-8 w-full items-center justify-start text-primary',
                                                         page.component.startsWith(
-                                                            item.componentRoot,
+                                                            item.componentRoot ||
+                                                                '',
                                                         ) && 'text-blue-500',
                                                     )
                                                 "
