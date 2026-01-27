@@ -31,7 +31,7 @@ const form = useForm<App.Data.FormPostData>({
     published_at: true,
     is_new_thumbnail: false,
     deleted_at: null,
-    tags: undefined,
+    tags: null,
 }).withPrecognition('post', posts.store().url);
 
 const submit = () => form.submit();

@@ -7,7 +7,7 @@ import {
     FieldLabel,
 } from '@/components/ui/field';
 import { cn, formatSize } from '@/lib/utils';
-import { File, FileX, Upload, X } from 'lucide-vue-next';
+import { File as FileIcon, FileX, Upload, X } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 interface Props {
@@ -16,6 +16,8 @@ interface Props {
     description?: string;
     error?: string | undefined;
 }
+
+const FileCtor = File;
 
 const emit = defineEmits<{
     (e: 'validate'): void;
@@ -54,9 +56,7 @@ const onDrop = (event: DragEvent) => {
     const files = event.dataTransfer?.files;
 
     if (files && files.length > 0) {
-        const file = files[0];
-
-        model.value = file;
+        model.value = files[0];
 
         emit('validate');
     }
@@ -136,7 +136,7 @@ const removeFile = () => {
                 "
             >
                 <component
-                    :is="props.error ? FileX : File"
+                    :is="props.error ? FileX : FileIcon"
                     :class="
                         cn(
                             'h-6 w-6',
@@ -145,7 +145,7 @@ const removeFile = () => {
                     "
                 />
             </div>
-            <div class="min-w-0 flex-1">
+            <div v-if="model instanceof FileCtor" class="min-w-0 flex-1">
                 <p
                     :class="
                         cn(

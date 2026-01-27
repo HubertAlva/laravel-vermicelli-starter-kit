@@ -15,6 +15,7 @@ import type { HTMLAttributes } from 'vue';
 
 interface Props {
     label?: string;
+    id: string;
     description?: string;
     error?: string | null;
     extraToolbarsExclude?: ToolbarNames[];
@@ -85,7 +86,7 @@ const onUploadImg = async (
     <Field
         :class="
             cn(
-                'mx-auto w-full max-w-[300px] sm:max-w-[600px] md:max-w-full',
+                'mx-auto w-full max-w-75 sm:max-w-150 md:max-w-full',
                 props.class,
             )
         "

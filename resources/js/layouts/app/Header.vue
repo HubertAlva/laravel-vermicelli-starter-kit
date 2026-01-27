@@ -16,13 +16,17 @@ import { useWindowScroll } from '@vueuse/core';
 import { Menu } from 'lucide-vue-next';
 import { ref, watch } from 'vue';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
-
 const { y } = useWindowScroll();
 const previousScroll = ref(0);
 const scrollingUp = ref(false);
 
 const page = usePage();
+
+function activeItemStyles(componentRoot?: string) {
+    return page.component.startsWith(componentRoot || '')
+        ? 'text-blue-500'
+        : '';
+}
 
 watch(y, (value, prevValue) => {
     scrollingUp.value = value <= prevValue;
@@ -46,7 +50,7 @@ watch(y, (value, prevValue) => {
         <nav class="flex w-full max-w-6xl items-center justify-between px-5">
             <Link :href="home().url">
                 <img
-                    :alt="appName"
+                    :alt="page.props.name"
                     class="max-w-28 md:max-w-37.5"
                     src="/images/logo.png"
                 />
@@ -61,9 +65,7 @@ watch(y, (value, prevValue) => {
                             :class="
                                 cn(
                                     'text-primary hover:text-blue-500',
-                                    page.component.startsWith(
-                                        item.componentRoot || '',
-                                    ) && 'text-blue-500',
+                                    activeItemStyles(item.componentRoot),
                                 )
                             "
                             :href="item.url"
@@ -98,10 +100,9 @@ watch(y, (value, prevValue) => {
                                                 :class="
                                                     cn(
                                                         'flex min-h-8 w-full items-center justify-start text-primary',
-                                                        page.component.startsWith(
-                                                            item.componentRoot ||
-                                                                '',
-                                                        ) && 'text-blue-500',
+                                                        activeItemStyles(
+                                                            item.componentRoot,
+                                                        ),
                                                     )
                                                 "
                                             >

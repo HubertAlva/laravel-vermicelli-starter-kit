@@ -6,15 +6,19 @@ import {
     BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbPage,
-    BreadcrumbSeparator
+    BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import {
+    SidebarInset,
+    SidebarProvider,
+    SidebarTrigger,
+} from '@/components/ui/sidebar';
 import AppSidebar from '@/layouts/admin/AppSidebar.vue';
 import { truncateText } from '@/lib/utils';
 import Notifications from '@/plugins/Notifications.vue';
 import admin from '@/routes/admin';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, usePage } from '@inertiajs/vue3';
 
 interface Props {
     title: string;
@@ -27,7 +31,7 @@ interface Props {
 
 const { title, breadcrumb, container = 'full' } = defineProps<Props>();
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const page = usePage();
 </script>
 
 <template>
@@ -52,7 +56,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
                             <BreadcrumbItem class="hidden md:block">
                                 <BreadcrumbLink as-child>
                                     <Link :href="admin.dashboard().url">
-                                        {{ appName }}
+                                        {{ page.props.name }}
                                     </Link>
                                 </BreadcrumbLink>
                             </BreadcrumbItem>

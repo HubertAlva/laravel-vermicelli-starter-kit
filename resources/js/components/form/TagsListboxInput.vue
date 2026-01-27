@@ -65,7 +65,7 @@ const optionMap = computed(
     () => new Map(props.options.map((o) => [o.id, o.name])),
 );
 
-const getLabel = (value: number) => {
+const getLabel = (value: any) => {
     return optionMap.value.get(value) ?? value;
 };
 
@@ -91,8 +91,8 @@ watch(searchTerm, (f) => {
                         class="w-full"
                     >
                         <TagsInputItem
-                            v-for="item in tags"
-                            :key="item"
+                            v-for="(item, index) in tags"
+                            :key="index"
                             :value="item"
                         >
                             <div
@@ -126,18 +126,18 @@ watch(searchTerm, (f) => {
                 </PopoverAnchor>
 
                 <PopoverContent
-                    class="w-[var(--reka-popper-anchor-width)] p-1"
+                    class="w-(--reka-popper-anchor-width) p-1"
                     @open-auto-focus.prevent
                 >
                     <ListboxContent
-                        class="max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto empty:p-1 empty:after:block empty:after:content-['No_options']"
+                        class="max-h-75 scroll-py-1 overflow-x-hidden overflow-y-auto empty:p-1 empty:after:block empty:after:content-['No_options']"
                         tabindex="0"
                     >
                         <ListboxItem
                             v-for="item in filteredOptions"
                             :key="item.id"
                             :value="item.id"
-                            class="relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=\'size-\'])]:size-4 [&_svg:not([class*=\'text-\'])]:text-muted-foreground"
+                            class="relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-accent data-highlighted:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=\'size-\'])]:size-4 [&_svg:not([class*=\'text-\'])]:text-muted-foreground"
                             @select="
                                 () => {
                                     searchTerm = '';

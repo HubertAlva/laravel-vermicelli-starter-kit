@@ -30,7 +30,7 @@ defineOptions({
     inheritAttrs: false,
 });
 
-const model = defineModel<string[]>({
+const model = defineModel<string[] | any[] | null>({
     default: [],
 });
 </script>

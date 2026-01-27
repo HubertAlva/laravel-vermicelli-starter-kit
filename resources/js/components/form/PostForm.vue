@@ -1,12 +1,5 @@
 <script lang="ts" setup>
-import {
-    ImageInput,
-    MarkdownInput,
-    SwitchInput,
-    TagsInput,
-    TextareaInput,
-    TextInput,
-} from '@/components/form/index';
+import { ImageInput, MarkdownInput, SwitchInput, TagsInput, TextareaInput, TextInput } from '@/components/form/index';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Field, FieldGroup, FieldSet } from '@/components/ui/field';
@@ -102,6 +95,7 @@ const validateField = validate(props.form);
                 <FieldSet>
                     <FieldGroup>
                         <MarkdownInput
+                            id="content"
                             v-model="form.content"
                             :error="form.errors.content"
                             label="Contenido"

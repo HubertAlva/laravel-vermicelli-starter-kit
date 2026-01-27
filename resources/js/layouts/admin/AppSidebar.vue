@@ -20,8 +20,6 @@ const props = withDefaults(defineProps<SidebarProps>(), {
     collapsible: 'icon',
 });
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
-
 const page = usePage();
 
 const data = {
@@ -55,7 +53,9 @@ const data = {
                 <div
                     class="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden"
                 >
-                    <span class="truncate font-medium">{{ appName }}</span>
+                    <span class="truncate font-medium">
+                        {{ page.props.name }}
+                    </span>
                 </div>
             </Link>
         </SidebarHeader>
