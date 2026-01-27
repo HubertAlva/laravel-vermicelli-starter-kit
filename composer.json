@@ -59,7 +59,6 @@
             "@php artisan key:generate",
             "@php artisan migrate --force",
             "@php artisan storage:link",
-            "@php artisan typescript:transform",
             "npm install",
             "npm run build"
         ],
@@ -90,8 +89,7 @@
             "@php artisan key:generate --ansi",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi",
-            "@php artisan storage:link --ansi",
-            "@php artisan typescript:transform --graceful --ansi"
+            "@php artisan storage:link --ansi"
         ],
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
