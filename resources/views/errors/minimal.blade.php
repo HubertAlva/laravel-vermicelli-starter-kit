@@ -22,29 +22,117 @@
 
     {{-- Inline style to set the HTML background color based on our theme in app.css --}}
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            border: 0 solid;
+        }
+
         html {
             background-color: oklch(1 0 0);
+            font-family: sans-serif;
+            height: 100%;
         }
 
         html.dark {
             background-color: oklch(0.145 0 0);
         }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            height: 100%;
+            background-color: oklch(20.5% 0 0);
+        }
+
+        section {
+            padding-block: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-inline: 1rem;
+            height: 100%;
+        }
+
+        div {
+            max-width: 48rem;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+            font-size: 4.5rem;
+            line-height: 1;
+            letter-spacing: -0.025em;
+            font-weight: 800;
+            color: oklch(97% 0 0);
+        }
+
+        p {
+            margin-bottom: 1rem;
+            font-size: 1.875rem;
+            line-height: 1.2;
+            letter-spacing: -0.025em;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        a {
+            display: inline-flex;
+            color: #ffffff;
+            margin-block: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            line-height: calc(1.25 / 0.875);
+            padding-inline: 1.25rem;
+            padding-block: 0.625rem;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            text-decoration-line: none;
+
+            &:hover {
+                @media (hover: hover) {
+                    text-decoration-line: underline;
+                }
+            }
+
+            &:focus {
+                --tw-outline-style: none;
+                outline-style: none;
+            }
+        }
+
+        @media (width >= 48rem) {
+            p {
+                font-size: 2.25rem;
+                line-height: calc(2.5 / 2.25);
+            }
+        }
+
+
+        @media (width >= 64rem ) {
+            section {
+                padding-block: 4rem;
+                padding-inline: 1.5rem;
+            }
+
+            h1 {
+                font-size: 8rem;
+                line-height: 1;
+            }
+        }
     </style>
 
     <title>@yield('title')</title>
-
-    @vite('resources/css/app.css')
 </head>
-<body class="antialiased h-full bg-neutral-900">
-<section class=" py-8 flex justify-center items-center lg:py-16 lg:px-6 px-4 h-full">
-    <div class="text-center max-w-3xl">
-        <h1 class="mb-4 text-7xl tracking-tight font-extrabold lg:text-9xl text-neutral-100">@yield('code')</h1>
-        <p class="mb-4 text-3xl tracking-tight font-bold  md:text-4xl text-white">@yield('message')</p>
+<body>
+<section>
+    <div>
+        <h1>@yield('code')</h1>
+        <p>@yield('message')</p>
 
-        <a href="{{route('home')}}"
-           class="inline-flex text-white bg-primary-600 hover:bg-primary-800 focus:ring-4 focus:outline-none
-               focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center hover:underline
-               my-4">
+        <a href="{{route('home')}}">
             Regresar al inicio
         </a>
     </div>
