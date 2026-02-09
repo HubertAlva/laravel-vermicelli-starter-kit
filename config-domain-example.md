@@ -36,8 +36,9 @@ sudo nano /etc/apache2/sites-available/my-project.local.conf
 ### Example (Laravel-ready, with wildcard subdomains)
 
 ```apache
-Define ROOT "/var/www/my-project/public"
-Define SITE "my-project.local"
+Define NAME "my-project"
+Define ROOT "/var/www/${NAME}/public"
+Define SITE "${NAME}.local"
 
 <VirtualHost *:80>
     ServerName ${SITE}
@@ -49,8 +50,8 @@ Define SITE "my-project.local"
         Require all granted
     </Directory>
 
-    ErrorLog ${APACHE_LOG_DIR}/my-project_error.log
-    CustomLog ${APACHE_LOG_DIR}/my-project_access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/${NAME}_error.log
+    CustomLog ${APACHE_LOG_DIR}/${NAME}_access.log combined
 </VirtualHost>
 ```
 
