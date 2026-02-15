@@ -13,19 +13,37 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { AcceptableValue } from 'reka-ui';
 import { computed } from 'vue';
 
-interface Props {
+interface Props<T = any> {
     label?: string;
     description?: string;
     error?: string | undefined;
     multiple?: boolean;
-    options: Array<any>;
+    options: T[];
+    optionLabel?: keyof T | ((option: T) => string);
+    optionValue?: keyof T | ((option: T) => string | number);
+    hasEmptyOption?: boolean;
 }
 
 type SelectValue = string | number | null | string[] | number[];
 
-const props = defineProps<Props>();
+type OptionItem = {
+    value: AcceptableValue;
+    label: string;
+};
+
+const {
+    label,
+    description,
+    error,
+    multiple = false,
+    options,
+    optionLabel,
+    optionValue,
+    hasEmptyOption = true,
+} = defineProps<Props>();
 
 defineOptions({
     inheritAttrs: false,
@@ -37,32 +55,56 @@ const emit = defineEmits<{
     (e: 'validate'): void;
 }>();
 
-const options = computed(() => {
-    return props.options.map((option) => {
-        return {
-            value: option.id,
-            label: option.name,
-        };
-    });
-});
+function getOptionLabel(option: any): string {
+    if (typeof optionLabel === 'function') {
+        return optionLabel(option);
+    }
 
-if (!props.multiple) {
-    options.value.unshift({
-        value: null,
-        label: 'Sin selección',
-    });
+    if (typeof optionLabel === 'string') {
+        return option[optionLabel];
+    }
+
+    return option.name ?? option.label ?? String(option);
 }
+
+function getOptionValue(option: any): string | number {
+    if (typeof optionValue === 'function') {
+        return optionValue(option);
+    }
+
+    if (typeof optionValue === 'string') {
+        return option[optionValue];
+    }
+
+    return option.id ?? option.value ?? option;
+}
+
+const normalizedOptions = computed<OptionItem[]>(() => {
+    const mapped: OptionItem[] = options.map((option) => ({
+        value: getOptionValue(option),
+        label: getOptionLabel(option),
+    }));
+
+    if (!multiple && hasEmptyOption) {
+        mapped.unshift({
+            value: null,
+            label: 'Sin selección',
+        });
+    }
+
+    return mapped;
+});
 </script>
 
 <template>
-    <Field :data-invalid="!!props.error">
-        <FieldLabel v-if="props.label">
-            {{ props.label }}
+    <Field :data-invalid="!!error">
+        <FieldLabel v-if="label">
+            {{ label }}
         </FieldLabel>
 
         <Select
             v-model="model"
-            :multiple="props.multiple"
+            :multiple="multiple"
             @update:modelValue="emit('validate')"
         >
             <SelectTrigger class="w-full">
@@ -71,8 +113,8 @@ if (!props.multiple) {
             <SelectContent>
                 <SelectGroup>
                     <SelectItem
-                        v-for="option in options"
-                        :key="option.value"
+                        v-for="option in normalizedOptions"
+                        :key="String(option.value)"
                         :value="option.value"
                     >
                         {{ option.label }}
@@ -81,10 +123,10 @@ if (!props.multiple) {
             </SelectContent>
         </Select>
 
-        <FieldDescription v-if="props.description">
-            {{ props.description }}
+        <FieldDescription v-if="description">
+            {{ description }}
         </FieldDescription>
 
-        <FieldError v-if="props.error" :errors="[props.error]" />
+        <FieldError v-if="error" :errors="[error]" />
     </Field>
 </template>

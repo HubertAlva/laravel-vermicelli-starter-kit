@@ -31,7 +31,9 @@ const head = {
 
 <template>
     <AppLayout :head="head">
-        <section class="bg-linear-to-b from-neutral-50 to-white">
+        <section
+            class="bg-linear-to-b from-neutral-50 to-background dark:from-neutral-800"
+        >
             <Container as="div">
                 <header>
                     <h1

@@ -1,5 +1,12 @@
 <script lang="ts" setup>
-import { ImageInput, MarkdownInput, SwitchInput, TagsInput, TextareaInput, TextInput } from '@/components/form/index';
+import {
+    ImageInput,
+    MarkdownInput,
+    SwitchInput,
+    TagsInput,
+    TextareaInput,
+    TextInput,
+} from '@/components/form/index';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Field, FieldGroup, FieldSet } from '@/components/ui/field';
@@ -9,7 +16,7 @@ import { InertiaPrecognitiveForm } from '@inertiajs/vue3';
 import { ref, toRef } from 'vue';
 
 const props = defineProps<{
-    form: InertiaPrecognitiveForm<App.Data.FormPostData>;
+    form: InertiaPrecognitiveForm<App.Data.PostFormData>;
     buttonLabel: string;
 }>();
 

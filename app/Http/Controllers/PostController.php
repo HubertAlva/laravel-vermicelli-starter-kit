@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\Admin\GetIndexData;
 use App\Actions\Post\Create;
 use App\Actions\Post\Update;
-use App\Data\FormPostData;
+use App\Data\PostFormData;
 use App\Data\PostData;
 use App\Filters\SearchFilter;
 use App\Http\Requests\StorePostRequest;
@@ -36,7 +36,7 @@ class PostController extends Controller
         $posts = $action->execute(
             model: Post::class,
             allowedFilters: [
-                AllowedFilter::custom('search', new SearchFilter), AllowedFilter::trashed(),
+                AllowedFilter::custom('search', new SearchFilter(['name', 'slug'])), AllowedFilter::trashed(),
             ],
         );
 
@@ -52,7 +52,7 @@ class PostController extends Controller
     public function store(StorePostRequest $request, Create $action): RedirectResponse
     {
         $action->execute(
-            FormPostData::from($request->validated()),
+            PostFormData::from($request->validated()),
             $request->file('thumbnail')
         );
 
@@ -74,7 +74,7 @@ class PostController extends Controller
     {
         $action->execute(
             $post,
-            FormPostData::from($request->validated()),
+            PostFormData::from($request->validated()),
             $request->file('thumbnail')
         );
 

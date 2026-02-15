@@ -1,14 +1,4 @@
 declare namespace App.Data {
-export type FormPostData = {
-name?: string;
-excerpt?: string;
-content?: string;
-thumbnail: any | string | null;
-published_at: boolean;
-is_new_thumbnail: boolean;
-deleted_at: string | null;
-tags: Array<any> | null;
-};
 export type PaginatorLinkData = {
 url?: string;
 label: string;
@@ -39,6 +29,16 @@ created_at?: string;
 updated_at?: string;
 deleted_at: string | null;
 tags: Array<App.Data.TagData> | null;
+};
+export type PostFormData = {
+name?: string;
+excerpt?: string;
+content?: string;
+thumbnail: any | string | null;
+published_at: boolean;
+is_new_thumbnail: boolean;
+deleted_at: string | null;
+tags: Array<any> | null;
 };
 export type SendContactData = {
 name: string;

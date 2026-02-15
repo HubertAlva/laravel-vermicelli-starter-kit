@@ -50,7 +50,7 @@ const head = {
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
-            <div class="mx-auto prose">
+            <div class="mx-auto prose dark:prose-invert">
                 <h1>
                     {{ props.post.name }}
                 </h1>

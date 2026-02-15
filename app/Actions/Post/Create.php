@@ -2,7 +2,7 @@
 
 namespace App\Actions\Post;
 
-use App\Data\FormPostData;
+use App\Data\PostFormData;
 use App\Models\Post;
 use App\Services\EditorContentProcessorService;
 use App\Traits\HandleMediaUploads;
@@ -16,9 +16,11 @@ class Create
 
     public function __construct(
         private EditorContentProcessorService $contentProcessor,
-    ) {}
+    )
+    {
+    }
 
-    public function execute(FormPostData $data, ?UploadedFile $thumbnail): Post
+    public function execute(PostFormData $data, ?UploadedFile $thumbnail): Post
     {
         return DB::transaction(function () use ($data, $thumbnail) {
 

@@ -29,18 +29,17 @@ import {
 } from 'reka-ui';
 import { computed, ref, watch } from 'vue';
 
-interface Props {
+interface Props<T = any> {
     label?: string;
     description?: string;
     placeholder?: string;
-    options: {
-        id: number | string;
-        name: string;
-    }[];
+    options: T[];
+    optionLabel?: keyof T | ((option: T) => string);
+    optionValue?: keyof T | ((option: T) => string | number);
     error?: string | undefined;
 }
 
-type ID = number;
+type ID = number | string;
 
 const props = defineProps<Props>();
 
@@ -53,17 +52,46 @@ const open = ref(false);
 
 const { contains } = useFilter({ sensitivity: 'base' });
 
+function getOptionLabel(option: any): string {
+    if (typeof props.optionLabel === 'function') {
+        return props.optionLabel(option);
+    }
+
+    if (typeof props.optionLabel === 'string') {
+        return option[props.optionLabel];
+    }
+
+    return option.name ?? option.label ?? String(option);
+}
+
+function getOptionValue(option: any): string | number {
+    if (typeof props.optionValue === 'function') {
+        return props.optionValue(option);
+    }
+
+    if (typeof props.optionValue === 'string') {
+        return option[props.optionValue];
+    }
+
+    return option.id ?? option.value ?? option;
+}
+
 const filteredOptions = computed(() =>
     searchTerm.value === ''
         ? props.options
         : props.options.filter((option) =>
-              contains(option.name, searchTerm.value),
+              contains(getOptionLabel(option), searchTerm.value),
           ),
 );
 
-const optionMap = computed(
-    () => new Map(props.options.map((o) => [o.id, o.name])),
-);
+const optionMap = computed(() => {
+    return new Map(
+        props.options.map((option) => [
+            getOptionValue(option),
+            getOptionLabel(option),
+        ]),
+    );
+});
 
 const getLabel = (value: any) => {
     return optionMap.value.get(value) ?? value;
@@ -135,8 +163,8 @@ watch(searchTerm, (f) => {
                     >
                         <ListboxItem
                             v-for="item in filteredOptions"
-                            :key="item.id"
-                            :value="item.id"
+                            :key="getOptionValue(item)"
+                            :value="getOptionValue(item)"
                             class="relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 data-highlighted:bg-accent data-highlighted:text-accent-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=\'size-\'])]:size-4 [&_svg:not([class*=\'text-\'])]:text-muted-foreground"
                             @select="
                                 () => {
@@ -144,7 +172,7 @@ watch(searchTerm, (f) => {
                                 }
                             "
                         >
-                            <span>{{ item.name }}</span>
+                            <span>{{ getOptionLabel(item) }}</span>
 
                             <ListboxItemIndicator
                                 class="ml-auto inline-flex items-center justify-center"

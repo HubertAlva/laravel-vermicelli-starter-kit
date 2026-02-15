@@ -32,7 +32,7 @@ defineProps<{
 
                     <div
                         v-else
-                        class="flex h-full items-center justify-center bg-neutral-100"
+                        class="flex h-full items-center justify-center bg-neutral-100 dark:bg-neutral-900"
                     >
                         <Image />
                     </div>

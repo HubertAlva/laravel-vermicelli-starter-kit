@@ -1,4 +1,6 @@
+export { default as CalendarInput } from './CalendarInput.vue';
 export { default as CheckboxInput } from './CheckboxInput.vue';
+export { default as ComboboxInput } from './ComboboxInput.vue';
 export { default as FileInput } from './FileInput.vue';
 export { default as ImageInput } from './ImageInput.vue';
 export { default as MarkdownInput } from './MarkdownInput.vue';

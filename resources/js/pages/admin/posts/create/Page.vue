@@ -23,7 +23,7 @@ const breadcrumb = [
     },
 ];
 
-const form = useForm<App.Data.FormPostData>({
+const form = useForm<App.Data.PostFormData>({
     name: undefined,
     excerpt: undefined,
     content: undefined,
