@@ -6,7 +6,9 @@ import { Deferred, router } from '@inertiajs/vue3';
 import { getCoreRowModel, useVueTable } from '@tanstack/vue-table';
 import { ref, shallowRef, watch } from 'vue';
 
-const props = defineProps<IndexTableProps<TData, TValue>>();
+const props = withDefaults(defineProps<IndexTableProps<TData, TValue>>(), {
+    showTrashedFilter: true,
+});
 
 const dataRef = shallowRef<TData[]>(props.collection?.data ?? []);
 
@@ -148,7 +150,10 @@ watch(
 
 <template>
     <Table>
-        <TableHeader :table="table" />
+        <TableHeader
+            :table="table"
+            :showTrashedFilter="props.showTrashedFilter"
+        />
 
         <Deferred :data="props.deferredData">
             <template #fallback>

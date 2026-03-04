@@ -22,11 +22,13 @@ class UserSeeder extends Seeder
         Permission::create(['name' => 'admin.all'])->assignRole($role_admin);
 
         // Admin user
-        User::create([
+        $user = User::create([
             'name' => 'Administrador',
             'email' => 'admin@hubertalva.com',
             'password' => Hash::make('1234'),
             'email_verified_at' => now(),
         ])->assignRole('admin');
+
+        $user->lockModel();
     }
 }

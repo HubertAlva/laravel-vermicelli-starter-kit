@@ -14,6 +14,11 @@ export type BaseProps<TData> = {
     table: ReturnType<typeof useVueTable<TData>>;
 };
 
+// Table Header props
+export type HeaderProps<TData> = BaseProps<TData> & {
+    showTrashedFilter?: boolean;
+};
+
 // Table Body props
 export type BodyProps<TData, TValue> = {
     table: ReturnType<typeof useVueTable<TData>>;
@@ -40,4 +45,5 @@ export type IndexTableProps<TData, TValue> = {
     onRowHover?: (row: TData) => void;
     onRowLeave?: () => void;
     deferredData: string;
+    showTrashedFilter?: boolean;
 };

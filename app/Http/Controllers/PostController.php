@@ -85,7 +85,9 @@ class PostController extends Controller
                 'id' => $post->id,
             ]);
 
-        return Redirect::route('admin.posts.index');
+        $post->refresh();
+
+        return Redirect::back();
     }
 
     public function edit(Post $post): Response

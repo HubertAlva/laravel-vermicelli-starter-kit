@@ -51,4 +51,20 @@ id: number;
 name: string;
 slug: string;
 };
+export type UserData = {
+id: number;
+name: string;
+email: string;
+email_verified_at?: string;
+role?: string;
+created_at?: string;
+updated_at?: string;
+};
+export type UserFormData = {
+name?: string;
+email?: string;
+role: string | null;
+password: string | null;
+password_confirmation: string | null;
+};
 }

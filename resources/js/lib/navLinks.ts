@@ -1,9 +1,15 @@
 import { home } from '@/routes';
 import admin from '@/routes/admin';
 import posts from '@/routes/admin/posts';
+import users from '@/routes/admin/users';
 import blog from '@/routes/blog';
 import contact from '@/routes/contact';
-import { LayoutDashboard, LucideIcon, TableOfContents } from 'lucide-vue-next';
+import {
+    LayoutDashboard,
+    LucideIcon,
+    TableOfContents,
+    Users,
+} from 'lucide-vue-next';
 import { ref } from 'vue';
 
 export type NavLink = {
@@ -48,6 +54,12 @@ export const adminNavLinks = ref<NavLink[]>([
         url: admin.dashboard().url,
         icon: LayoutDashboard,
         componentRoot: 'admin/dashboard',
+    },
+    {
+        name: 'Usuarios',
+        url: users.index().url,
+        icon: Users,
+        componentRoot: 'admin/users',
     },
     {
         name: 'Contenido',

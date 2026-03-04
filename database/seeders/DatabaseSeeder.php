@@ -14,7 +14,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Post::factory(50)->create();
+        if (app()->isLocal()) {
+            Post::factory(50)->create();
+        }
 
         $this->call([
             UserSeeder::class,

@@ -5,11 +5,10 @@ import { usePrefetch } from '@/composables/usePrefetch';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { create, edit, index } from '@/routes/admin/posts';
 import { columns } from '@/table/columns/postColumns';
+import { TrashedFilter } from '@/table/types';
 import { Link, usePage } from '@inertiajs/vue3';
 
 type DataType = App.Data.PostData;
-
-type TrashedFilter = 'with' | 'only' | undefined;
 
 type Filters = {
     search?: string;

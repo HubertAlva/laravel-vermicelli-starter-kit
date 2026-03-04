@@ -1,8 +1,15 @@
 <script lang="ts" setup>
+import {
+    FormHeaderBase,
+    HeaderActions,
+    Heading,
+    HeadingTitle,
+} from '@/components/form-header';
 import PostForm from '@/components/form/PostForm.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useSoftDelete } from '@/composables/useSoftDelete';
+import { useUnsavedChanges } from '@/composables/useUnsavedChanges';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { cn, truncateText } from '@/lib/utils';
 import Tooltip from '@/plugins/Tooltip.vue';
@@ -41,9 +48,12 @@ const form = useForm<App.Data.PostFormData>({
     is_new_thumbnail: false,
     deleted_at: props.post.deleted_at ?? null,
     tags: tags,
-}).withPrecognition('post', posts.update(props.post.id).url);
+}).withPrecognition(posts.update(props.post.id));
 
-const submit = () => form.submit();
+const submit = () =>
+    form.submit({
+        preserveState: false,
+    });
 
 form.validateFiles();
 
@@ -56,36 +66,27 @@ const deleteTooltip = computed(() => {
 });
 
 const { restore, remove } = useSoftDelete({
-    restore: (id) => posts.restore(id).url,
     destroy: (id) => posts.destroy(id).url,
     softDelete: (id) => posts.softDelete(id).url,
+    restore: (id) => posts.restore(id).url,
 });
 
-window.addEventListener('beforeunload', (event) => {
-    if (form.isDirty) {
-        event.preventDefault();
-        event.returnValue = '';
-    }
-});
+useUnsavedChanges(() => form.isDirty);
 </script>
 
 <template>
     <AdminLayout :breadcrumb="breadcrumb" :title="title" container="full">
         <div>
-            <div
-                class="sticky top-0 z-10 -mt-4 flex flex-wrap items-center justify-between gap-4 bg-muted py-4"
-            >
-                <div class="flex flex-wrap items-center justify-start gap-2">
-                    <div class="flex items-center justify-start gap-2">
-                        <h1 class="text-2xl font-semibold">
-                            {{
-                                truncateText(
-                                    form.name ? form.name : defaultTitle,
-                                    35,
-                                )
-                            }}
-                        </h1>
-                    </div>
+            <FormHeaderBase>
+                <Heading>
+                    <HeadingTitle>
+                        {{
+                            truncateText(
+                                form.name ? form.name : defaultTitle,
+                                35,
+                            )
+                        }}
+                    </HeadingTitle>
 
                     <Badge :variant="form.published_at ? 'success' : 'warn'">
                         {{ publishLabel }}
@@ -102,9 +103,9 @@ window.addEventListener('beforeunload', (event) => {
                             )
                         }}
                     </Badge>
-                </div>
+                </Heading>
 
-                <div class="flex flex-wrap items-center justify-end gap-2">
+                <HeaderActions>
                     <Button
                         v-if="form.deleted_at !== null"
                         type="button"
@@ -131,8 +132,8 @@ window.addEventListener('beforeunload', (event) => {
                     <Button type="submit" @click="submit">
                         {{ buttonLabel }}
                     </Button>
-                </div>
-            </div>
+                </HeaderActions>
+            </FormHeaderBase>
 
             <form
                 :class="

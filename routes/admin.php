@@ -3,13 +3,21 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UploadEditorImagesController;
+use App\Http\Controllers\UserController;
 
 Route::middleware(['auth', 'verified', 'permission:admin.all'])
-    ->domain('admin.'.config('app.app_domain'))
+    ->domain('admin.' . config('app.app_domain'))
     ->name('admin.')
     ->group(function () {
 
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+
+        Route::get('users', [UserController::class, 'index'])->name('users.index');
+        Route::get('users/create', [UserController::class, 'create'])->name('users.create');
+        Route::post('users', [UserController::class, 'store'])->middleware('precognitive')->name('users.store');
+        Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+        Route::put('users/{user}', [UserController::class, 'update'])->middleware('precognitive')->name('users.update');
+        Route::delete('users/{user}', [UserController::class, 'destroy'])->middleware('precognitive')->name('users.destroy');
 
         Route::get('posts', [PostController::class, 'index'])->name('posts.index');
         Route::get('posts/create', [PostController::class, 'create'])->name('posts.create');

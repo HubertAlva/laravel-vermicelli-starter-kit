@@ -27,7 +27,7 @@ defineOptions({
     inheritAttrs: false,
 });
 
-const model = defineModel<string | number | undefined>();
+const model = defineModel<string | number | undefined | null>();
 
 const showPassword = ref(false);
 

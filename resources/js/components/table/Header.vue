@@ -2,14 +2,14 @@
 import { CardHeader } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { BaseProps } from '@/table/types';
+import { HeaderProps } from '@/table/types';
 import { router } from '@inertiajs/vue3';
 import { useFocus } from '@vueuse/core';
 import { debounce } from 'lodash';
 import { Search } from 'lucide-vue-next';
 import { shallowRef } from 'vue';
 
-const props = defineProps<BaseProps<TData>>();
+const props = defineProps<HeaderProps<TData>>();
 
 const debouncedSearch = debounce((value: string) => {
     props.table.setGlobalFilter(value);
@@ -46,13 +46,13 @@ useFocus(inputRef, { initialValue: true });
                     @update:model-value="updateSearch"
                 />
                 <span
-                    class="absolute inset-y-0 start-0 flex items-center justify-center px-2"
+                    class="absolute inset-y-0 inset-s-0 flex items-center justify-center px-2"
                 >
                     <Search class="size-6 text-muted-foreground" />
                 </span>
             </div>
 
-            <div>
+            <div v-if="props.showTrashedFilter">
                 <div class="items-top flex space-x-2">
                     <Checkbox
                         id="only_trashed"

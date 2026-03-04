@@ -1,9 +1,9 @@
 import { router } from '@inertiajs/vue3';
 
 type SoftDeleteUrls = {
-    restore: (id: number) => string;
     destroy: (id: number) => string;
-    softDelete: (id: number) => string;
+    softDelete?: (id: number) => string;
+    restore?: (id: number) => string;
 };
 
 export function useSoftDelete(
@@ -17,6 +17,11 @@ export function useSoftDelete(
         '¿Está seguro de que desea eliminar este elemento?';
 
     const restore = (id: number) => {
+        if (!urls.restore) {
+            console.warn('Restore URL is not defined.');
+            return;
+        }
+
         router.post(
             urls.restore(id),
             {},
@@ -27,8 +32,16 @@ export function useSoftDelete(
         );
     };
 
-    const remove = (id: number, isDeleted: boolean) => {
-        const targetUrl = isDeleted ? urls.destroy(id) : urls.softDelete(id);
+    const remove = (id: number, isDeleted = false) => {
+        let targetUrl: string;
+
+        if (isDeleted && urls.destroy) {
+            targetUrl = urls.destroy(id);
+        } else if (!isDeleted && urls.softDelete) {
+            targetUrl = urls.softDelete(id);
+        } else {
+            targetUrl = urls.destroy(id);
+        }
 
         if (!confirm(confirmMessage)) {
             return;
@@ -38,9 +51,8 @@ export function useSoftDelete(
             replace: true,
         });
     };
-
     return {
-        restore,
         remove,
+        restore,
     };
 }
