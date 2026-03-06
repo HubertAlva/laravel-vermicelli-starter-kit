@@ -41,6 +41,10 @@ const model = defineModel<ID | null>({
     default: null,
 });
 
+const emit = defineEmits<{
+    (e: 'validate'): void;
+}>();
+
 const open = ref(false);
 
 function getOptionLabel(option: any): string {
@@ -84,6 +88,7 @@ const selectedLabel = computed(() => {
 function selectOption(id: ID) {
     model.value = id === model.value ? null : id;
     open.value = false;
+    emit('validate');
 }
 </script>
 

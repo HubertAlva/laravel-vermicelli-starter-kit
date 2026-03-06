@@ -7,6 +7,7 @@ import {
 } from '@/components/form-header';
 import UserForm from '@/components/form/UserForm.vue';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { useSoftDelete } from '@/composables/useSoftDelete';
 import { useUnsavedChanges } from '@/composables/useUnsavedChanges';
 import AdminLayout from '@/layouts/AdminLayout.vue';
@@ -84,8 +85,13 @@ useUnsavedChanges(() => form.isDirty);
                         </Button>
                     </Tooltip>
 
-                    <Button type="submit" @click="submit">
+                    <Button
+                        type="submit"
+                        @click="submit"
+                        :disabled="form.processing || form.validating"
+                    >
                         {{ buttonLabel }}
+                        <Spinner v-if="form.validating || form.processing" />
                     </Button>
                 </HeaderActions>
             </FormHeaderBase>

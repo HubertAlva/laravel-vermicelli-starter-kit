@@ -17,6 +17,7 @@ class PostFormData extends Data
         public bool                     $published_at,
         public bool                     $is_new_thumbnail,
         public ?DateTime                $deleted_at,
+        /** @var array<string> */
         public ?array                   $tags,
     )
     {

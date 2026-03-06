@@ -23,6 +23,8 @@ class UserController extends Controller
 {
     public function index(GetIndexData $action): Response
     {
+        Gate::authorize('viewAny', User::class);
+
         $users = $action->execute(
             model: User::class,
             allowedFilters: [
@@ -40,11 +42,15 @@ class UserController extends Controller
 
     public function create(): Response
     {
+        Gate::authorize('create', User::class);
+
         return Inertia::render('admin/users/create/Page');
     }
 
     public function store(StoreUserRequest $request, Create $action): RedirectResponse
     {
+        Gate::authorize('create', User::class);
+
         $action->execute(
             UserFormData::from($request->validated()),
         );
@@ -60,6 +66,8 @@ class UserController extends Controller
 
     public function edit(User $user): Response
     {
+        Gate::authorize('update', $user);
+
         return Inertia::render('admin/users/edit/Page', [
             'user' => UserData::from($user),
         ]);
@@ -67,6 +75,8 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, Update $action, User $user): RedirectResponse
     {
+        Gate::authorize('update', $user);
+
         $user = $action->execute(
             $user,
             UserFormData::from($request->validated()),

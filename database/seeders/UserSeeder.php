@@ -12,15 +12,6 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
-        $role_admin = Role::create(['name' => 'admin']);
-
-        // Permissions for admin
-        Permission::create(['name' => 'admin.read'])->assignRole($role_admin);
-        Permission::create(['name' => 'admin.create'])->assignRole($role_admin);
-        Permission::create(['name' => 'admin.update'])->assignRole($role_admin);
-        Permission::create(['name' => 'admin.delete'])->assignRole($role_admin);
-        Permission::create(['name' => 'admin.all'])->assignRole($role_admin);
-
         // Admin user
         $user = User::create([
             'name' => 'Administrador',

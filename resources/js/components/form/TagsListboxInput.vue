@@ -43,9 +43,13 @@ type ID = number | string;
 
 const props = defineProps<Props>();
 
-const model = defineModel<ID[]>({
+const model = defineModel<ID[] | null>({
     default: [],
 });
+
+const emit = defineEmits<{
+    (e: 'validate'): void;
+}>();
 
 const searchTerm = ref('');
 const open = ref(false);
@@ -111,12 +115,18 @@ watch(searchTerm, (f) => {
         </FieldLabel>
 
         <Popover v-model:open="open">
-            <ListboxRoot v-model="model" highlight-on-hover multiple>
+            <ListboxRoot
+                v-model="model"
+                highlight-on-hover
+                multiple
+                @update:modelValue="emit('validate')"
+            >
                 <PopoverAnchor>
                     <TagsInput
                         v-slot="{ modelValue: tags }"
                         v-model="model"
                         class="w-full"
+                        @update:modelValue="emit('validate')"
                     >
                         <TagsInputItem
                             v-for="(item, index) in tags"

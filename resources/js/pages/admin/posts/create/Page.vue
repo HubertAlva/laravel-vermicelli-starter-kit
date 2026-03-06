@@ -8,6 +8,7 @@ import {
 import PostForm from '@/components/form/PostForm.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { useUnsavedChanges } from '@/composables/useUnsavedChanges';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { cn, truncateText } from '@/lib/utils';
@@ -72,8 +73,13 @@ useUnsavedChanges(() => form.isDirty);
                 </Heading>
 
                 <HeaderActions>
-                    <Button type="submit" @click="submit">
+                    <Button
+                        type="submit"
+                        @click="submit"
+                        :disabled="form.processing || form.validating"
+                    >
                         {{ buttonLabel }}
+                        <Spinner v-if="form.validating || form.processing" />
                     </Button>
                 </HeaderActions>
             </FormHeaderBase>

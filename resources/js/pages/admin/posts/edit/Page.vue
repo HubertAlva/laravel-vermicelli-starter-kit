@@ -8,14 +8,16 @@ import {
 import PostForm from '@/components/form/PostForm.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 import { useSoftDelete } from '@/composables/useSoftDelete';
 import { useUnsavedChanges } from '@/composables/useUnsavedChanges';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import { cn, truncateText } from '@/lib/utils';
 import Tooltip from '@/plugins/Tooltip.vue';
 import posts from '@/routes/admin/posts';
+import blog from '@/routes/blog';
 import { useForm } from '@inertiajs/vue3';
-import { RefreshCcw, Trash } from 'lucide-vue-next';
+import { ExternalLink, RefreshCcw, Trash } from 'lucide-vue-next';
 import { computed } from 'vue';
 
 const props = defineProps<{
@@ -79,14 +81,21 @@ useUnsavedChanges(() => form.isDirty);
         <div>
             <FormHeaderBase>
                 <Heading>
-                    <HeadingTitle>
-                        {{
-                            truncateText(
-                                form.name ? form.name : defaultTitle,
-                                35,
-                            )
-                        }}
-                    </HeadingTitle>
+                    <a
+                        :href="blog.show(post.slug).url"
+                        target="_blank"
+                        class="group flex items-center justify-start gap-2"
+                    >
+                        <HeadingTitle
+                            class="group-hover:text-blue-500 group-hover:underline"
+                        >
+                            {{ truncateText(defaultTitle, 35) }}
+                        </HeadingTitle>
+
+                        <ExternalLink
+                            class="size-5 text-muted-foreground group-hover:text-blue-500"
+                        />
+                    </a>
 
                     <Badge :variant="form.published_at ? 'success' : 'warn'">
                         {{ publishLabel }}
@@ -129,8 +138,13 @@ useUnsavedChanges(() => form.isDirty);
                         </Button>
                     </Tooltip>
 
-                    <Button type="submit" @click="submit">
+                    <Button
+                        type="submit"
+                        @click="submit"
+                        :disabled="form.processing || form.validating"
+                    >
                         {{ buttonLabel }}
+                        <Spinner v-if="form.validating || form.processing" />
                     </Button>
                 </HeaderActions>
             </FormHeaderBase>

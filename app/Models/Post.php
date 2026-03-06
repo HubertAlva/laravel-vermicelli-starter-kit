@@ -42,7 +42,7 @@ class Post extends Model implements HasMedia
     {
         $media = $this->getFirstMedia('posts_thumbnails');
 
-        if (! $media) {
+        if (!$media) {
             return null;
         }
 

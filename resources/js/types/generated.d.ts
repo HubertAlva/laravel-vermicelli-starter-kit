@@ -38,7 +38,7 @@ thumbnail: any | string | null;
 published_at: boolean;
 is_new_thumbnail: boolean;
 deleted_at: string | null;
-tags: Array<any> | null;
+tags: Array<string> | null;
 };
 export type SendContactData = {
 name: string;

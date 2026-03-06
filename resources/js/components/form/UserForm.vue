@@ -80,11 +80,13 @@ const roles = [{ label: 'Administrador', value: 'admin' }];
                 </FieldSet>
 
                 <Field orientation="horizontal">
-                    <Button :disabled="form.processing" type="submit">
+                    <Button
+                        type="submit"
+                        :disabled="form.processing || form.validating"
+                    >
                         {{ buttonLabel }}
+                        <Spinner v-if="form.validating || form.processing" />
                     </Button>
-
-                    <Spinner v-if="form.validating || form.processing" />
                 </Field>
             </FieldGroup>
         </CardContent>
