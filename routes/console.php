@@ -7,4 +7,4 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('app:clean-temp-editor-images')->daily();
+Schedule::command('editor:cleanup-temp-images')->hourly();

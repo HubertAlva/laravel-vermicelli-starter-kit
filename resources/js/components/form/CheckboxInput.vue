@@ -19,8 +19,13 @@ const props = defineProps<Props>();
 
 const model = defineModel<boolean | undefined>();
 
+const emit = defineEmits<{
+    (e: 'validate'): void;
+}>();
+
 const handleChange = (value: boolean | 'indeterminate') => {
     model.value = value === 'indeterminate' ? undefined : value;
+    emit('validate');
 };
 </script>
 

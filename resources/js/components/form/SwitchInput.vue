@@ -23,8 +23,13 @@ defineOptions({
 
 const model = defineModel<boolean | undefined>();
 
+const emit = defineEmits<{
+    (e: 'validate'): void;
+}>();
+
 const handleChange = (value: boolean) => {
     model.value = value;
+    emit('validate');
 };
 </script>
 
@@ -45,7 +50,7 @@ const handleChange = (value: boolean) => {
                 :id="props.id"
                 v-model="model"
                 v-bind="$attrs"
-                @update:model-value="handleChange"
+                @update:modelValue="handleChange"
             />
         </Field>
 

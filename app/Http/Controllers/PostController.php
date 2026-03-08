@@ -55,7 +55,7 @@ class PostController extends Controller
     public function store(StorePostRequest $request, Create $action): RedirectResponse
     {
         Gate::authorize('create', Post::class);
-        
+
         $action->execute(
             PostFormData::from($request->validated()),
             $request->file('thumbnail')

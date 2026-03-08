@@ -22,6 +22,10 @@ defineOptions({
 });
 
 const model = defineModel<string | undefined>();
+
+const emit = defineEmits<{
+    (e: 'validate'): void;
+}>();
 </script>
 
 <template>
@@ -42,6 +46,7 @@ const model = defineModel<string | undefined>();
             "
             :mask="[{ mask: '000 000 000' }]"
             v-bind="$attrs"
+            @update:modelValue="emit('validate')"
         />
 
         <FieldDescription v-if="props.description">

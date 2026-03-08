@@ -47,7 +47,7 @@ const roles = [{ label: 'Administrador', value: 'admin' }];
                                 label="Nombre"
                                 placeholder="Hubert Alva"
                                 type="text"
-                                @change="validateField('name')"
+                                @validate="validateField('name')"
                             />
 
                             <TextInput
@@ -57,7 +57,7 @@ const roles = [{ label: 'Administrador', value: 'admin' }];
                                 label="Correo electrónico"
                                 placeholder="micorreo@gmail.com"
                                 type="email"
-                                @change="validateField('email')"
+                                @validate="validateField('email')"
                             />
 
                             <PasswordInput
@@ -65,7 +65,7 @@ const roles = [{ label: 'Administrador', value: 'admin' }];
                                 v-model="form.password"
                                 :error="form.errors.password"
                                 label="Contraseña"
-                                @change="validateField('password')"
+                                @validate="validateField('password')"
                             />
 
                             <PasswordInput
@@ -73,7 +73,9 @@ const roles = [{ label: 'Administrador', value: 'admin' }];
                                 v-model="form.password_confirmation"
                                 :error="form.errors.password_confirmation"
                                 label="Confirmar contraseña"
-                                @change="validateField('password_confirmation')"
+                                @validate="
+                                    validateField('password_confirmation')
+                                "
                             />
                         </div>
                     </FieldGroup>

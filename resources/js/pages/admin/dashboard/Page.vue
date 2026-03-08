@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import PlaceholderPattern from '@/components/PlaceholderPattern.vue';
+import { Button } from '@/components/ui/button';
 import AdminLayout from '@/layouts/AdminLayout.vue';
+import testForm from '@/routes/admin/test-form';
+import { Link } from '@inertiajs/vue3';
 
 const title = 'Dashboard';
 
@@ -13,7 +16,7 @@ const breadcrumb = [
 
 <template>
     <AdminLayout :breadcrumb="breadcrumb" :title="title">
-        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
+        <div class="mb-4 grid auto-rows-min gap-4 md:grid-cols-3">
             <div
                 class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
             >
@@ -30,10 +33,11 @@ const breadcrumb = [
                 <PlaceholderPattern />
             </div>
         </div>
-        <div
-            class="relative min-h-screen flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border"
-        >
-            <PlaceholderPattern />
+
+        <div>
+            <Button asChild>
+                <Link :href="testForm.index().url">Formulario de prueba</Link>
+            </Button>
         </div>
     </AdminLayout>
 </template>

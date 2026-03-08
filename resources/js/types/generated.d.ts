@@ -51,6 +51,26 @@ id: number;
 name: string;
 slug: string;
 };
+export type TestFormData = {
+text?: string;
+textarea?: string;
+taglistbox: Array<string | number> | null;
+tags: Array<string> | null;
+switch: boolean;
+select: string | number | null;
+radio: string | number | null;
+phone?: string;
+password?: string;
+number?: number;
+markdown?: string;
+image: any | string | null;
+is_new_image: boolean;
+file: any | string | null;
+combobox: string | number | null;
+checkbox: boolean;
+date: any;
+datetime: any;
+};
 export type UserData = {
 id: number;
 name: string;

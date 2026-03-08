@@ -40,7 +40,7 @@ const form = useForm<App.Data.PostFormData>({
     is_new_thumbnail: false,
     deleted_at: null,
     tags: null,
-}).withPrecognition('post', posts.store().url);
+}).withPrecognition(posts.store());
 
 const submit = () => form.submit();
 

@@ -34,6 +34,10 @@ const showPassword = ref(false);
 const togglePassword = () => {
     showPassword.value = !showPassword.value;
 };
+
+const emit = defineEmits<{
+    (e: 'validate'): void;
+}>();
 </script>
 
 <template>
@@ -48,6 +52,7 @@ const togglePassword = () => {
                 v-model="model"
                 :type="showPassword ? 'text' : 'password'"
                 v-bind="$attrs"
+                @update:modelValue="emit('validate')"
             />
             <InputGroupAddon align="inline-end">
                 <InputGroupButton

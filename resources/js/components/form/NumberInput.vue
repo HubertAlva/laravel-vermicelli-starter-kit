@@ -27,6 +27,10 @@ defineOptions({
 });
 
 const model = defineModel<number | undefined>();
+
+const emit = defineEmits<{
+    (e: 'validate'): void;
+}>();
 </script>
 
 <template>
@@ -36,6 +40,7 @@ const model = defineModel<number | undefined>();
             v-model="model"
             class="gap-3"
             v-bind="$attrs"
+            @update:modelValue="emit('validate')"
         >
             <FieldLabel v-if="props.label" :for="props.id">
                 {{ props.label }}

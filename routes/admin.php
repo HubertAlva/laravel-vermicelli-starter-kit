@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\TestFormController;
 use App\Http\Controllers\UploadEditorImagesController;
 use App\Http\Controllers\UserController;
 
@@ -29,4 +30,8 @@ Route::middleware(['auth', 'verified', 'permission:admin.view'])
         Route::post('posts/{post}/restore', [PostController::class, 'restore'])->withTrashed()->name('posts.restore');
 
         Route::post('editor/upload', UploadEditorImagesController::class)->name('editor.upload');
+
+        // Test form route
+        Route::get('test-form', [TestFormController::class, 'index'])->name('test-form.index');
+        Route::post('test-form', [TestFormController::class, 'store'])->middleware('precognitive')->name('test-form.store');
     });

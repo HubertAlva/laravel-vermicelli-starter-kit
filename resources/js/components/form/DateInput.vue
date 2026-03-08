@@ -4,6 +4,7 @@ import {
     DateFormatter,
     getLocalTimeZone,
     parseAbsolute,
+    parseDate,
     today,
 } from '@internationalized/date';
 
@@ -22,7 +23,7 @@ import {
 } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-vue-next';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 interface Props {
     label?: string;
@@ -36,26 +37,49 @@ defineOptions({
     inheritAttrs: false,
 });
 
-const model = defineModel<string | undefined>();
+const model = defineModel<string | undefined | null>();
+
+const open = ref(false);
+
+const emit = defineEmits<{
+    (e: 'validate'): void;
+}>();
 
 const defaultPlaceholder = today(getLocalTimeZone());
 
 const dateValue = computed<DateValue | undefined>({
     get() {
-        return model.value
-            ? parseAbsolute(model.value, getLocalTimeZone())
-            : undefined;
+        if (!model.value) return undefined;
+
+        // DATE ONLY (like 2026-03-05)
+        if (model.value.length === 10) {
+            return parseDate(model.value);
+        }
+
+        // ISO datetime (like 2026-03-05T19:12:36-05:00)
+        return parseAbsolute(model.value, getLocalTimeZone());
     },
+
     set(value) {
-        model.value = value
-            ? value.toDate(getLocalTimeZone()).toISOString()
-            : undefined;
+        if (!value) {
+            model.value = undefined;
+            return;
+        }
+
+        const date = value.toDate(getLocalTimeZone());
+
+        model.value = date.toISOString().slice(0, 10);
     },
 });
 
 const df = new DateFormatter('es-PE', {
     dateStyle: 'long',
 });
+
+function handleModelUpdate() {
+    open.value = false;
+    emit('validate');
+}
 </script>
 
 <template>
@@ -64,7 +88,7 @@ const df = new DateFormatter('es-PE', {
             {{ props.label }}
         </FieldLabel>
 
-        <Popover v-slot="{ close }">
+        <Popover v-model:open="open">
             <PopoverTrigger as-child>
                 <Button
                     :class="
@@ -91,7 +115,8 @@ const df = new DateFormatter('es-PE', {
                     :default-placeholder="defaultPlaceholder"
                     initial-focus
                     layout="month-and-year"
-                    @update:model-value="close"
+                    locale="es-PE"
+                    @update:modelValue="handleModelUpdate"
                 />
             </PopoverContent>
         </Popover>

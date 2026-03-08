@@ -40,7 +40,7 @@ const validateField = validate(props.form);
                                 :error="form.errors.published_at"
                                 description="Si creas el artículo sin publicarlo no se mostrará en la sección de blog."
                                 label="¿Publicar artículo?"
-                                @change="validateField('published_at')"
+                                @validate="validateField('published_at')"
                             />
                         </div>
 
@@ -51,7 +51,7 @@ const validateField = validate(props.form);
                             label="Nombre"
                             placeholder="Nuevo post"
                             type="text"
-                            @change="validateField('name')"
+                            @validate="validateField('name')"
                         />
 
                         <TextareaInput
@@ -60,7 +60,7 @@ const validateField = validate(props.form);
                             :error="form.errors.excerpt"
                             label="Extracto"
                             placeholder="Tu contenido"
-                            @change="validateField('excerpt')"
+                            @validate="validateField('excerpt')"
                         />
                     </FieldGroup>
                 </FieldSet>

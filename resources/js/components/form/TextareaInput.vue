@@ -21,6 +21,10 @@ defineOptions({
 });
 
 const model = defineModel<string | undefined>();
+
+const emit = defineEmits<{
+    (e: 'validate'): void;
+}>();
 </script>
 
 <template>
@@ -34,6 +38,7 @@ const model = defineModel<string | undefined>();
             v-model="model"
             class="min-h-28"
             v-bind="$attrs"
+            @update:modelValue="emit('validate')"
         />
 
         <FieldDescription v-if="props.description">

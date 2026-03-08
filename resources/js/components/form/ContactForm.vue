@@ -32,7 +32,7 @@ const validateField = validate(props.form);
                                 label="Nombre"
                                 placeholder="Tu nombre"
                                 type="text"
-                                @change="validateField('name')"
+                                @validate="validateField('name')"
                             />
 
                             <TextInput
@@ -42,7 +42,7 @@ const validateField = validate(props.form);
                                 label="Correo electrónico"
                                 placeholder="Tu correo electrónico"
                                 type="email"
-                                @change="validateField('email')"
+                                @validate="validateField('email')"
                             />
                         </div>
 
@@ -53,7 +53,7 @@ const validateField = validate(props.form);
                             label="Asunto"
                             placeholder="Asunto del mensaje"
                             type="text"
-                            @change="validateField('subject')"
+                            @validate="validateField('subject')"
                         />
 
                         <TextareaInput
@@ -62,7 +62,7 @@ const validateField = validate(props.form);
                             :error="form.errors.message"
                             label="Mensaje"
                             placeholder="Escribe tu mensaje aquí..."
-                            @change="validateField('message')"
+                            @validate="validateField('message')"
                         />
 
                         <Field orientation="horizontal">

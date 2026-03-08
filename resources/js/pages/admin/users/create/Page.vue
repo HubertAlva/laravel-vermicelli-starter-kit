@@ -35,7 +35,7 @@ const form = useForm<App.Data.UserFormData>({
     role: null,
     password: null,
     password_confirmation: null,
-}).withPrecognition('post', users.store().url);
+}).withPrecognition(users.store());
 
 const submit = () => form.submit();
 
