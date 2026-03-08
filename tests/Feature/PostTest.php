@@ -7,10 +7,9 @@ use App\Actions\Post\Update;
 use App\Data\PostFormData;
 use App\Models\Post;
 use App\Models\User;
-use Database\Seeders\PermissionRoleSeeder;
-use Illuminate\Database\Events\DatabaseRefreshed;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class PostTest extends TestCase
@@ -39,6 +38,8 @@ class PostTest extends TestCase
     {
         $action = $this->app->make(Create::class);
 
+        Storage::fake('posts');
+
         $data = PostFormData::from([
             'name' => 'Test Post',
             'excerpt' => 'Short description',
@@ -48,7 +49,9 @@ class PostTest extends TestCase
             'tags' => ['tag1', 'tag2'],
         ]);
 
-        $post = $action->execute($data, null);
+        $thumbnail = UploadedFile::fake()->image('thumbnail.jpg');
+
+        $post = $action->execute($data, $thumbnail);
 
         $this->assertNotNull($post->id);
 
@@ -57,11 +60,21 @@ class PostTest extends TestCase
         $this->assertDatabaseHas('posts', [
             'name' => 'Test Post',
         ]);
+
+        $this->assertCount(1, $post->getMedia('posts_thumbnails'));
+
+        $media = $post->getFirstMedia('posts_thumbnails');
+
+        Storage::disk('posts')->assertExists(
+            $media->getPathRelativeToRoot()
+        );
     }
 
     public function test_posts_can_be_updated()
     {
         $action = $this->app->make(Update::class);
+
+        Storage::fake('posts');
 
         $post = Post::factory()->create();
 
@@ -70,11 +83,13 @@ class PostTest extends TestCase
             'excerpt' => 'Short description',
             'content' => 'Lorem',
             'published_at' => true,
-            'is_new_thumbnail' => false,
+            'is_new_thumbnail' => true,
             'tags' => null,
         ]);
 
-        $updatedPost = $action->execute($post, $data, null);
+        $thumbnail = UploadedFile::fake()->image('new-thumbnail.jpg');
+
+        $updatedPost = $action->execute($post, $data, $thumbnail)->fresh();
 
         $this->assertNotNull($updatedPost->id);
 
@@ -83,6 +98,14 @@ class PostTest extends TestCase
         $this->assertDatabaseHas('posts', [
             'name' => 'Updated Post',
         ]);
+
+        $this->assertCount(1, $updatedPost->getMedia('posts_thumbnails'));
+
+        $media = $updatedPost->getFirstMedia('posts_thumbnails');
+
+        Storage::disk('posts')->assertExists(
+            $media->getPathRelativeToRoot()
+        );
     }
 
     public function test_posts_can_be_deleted()

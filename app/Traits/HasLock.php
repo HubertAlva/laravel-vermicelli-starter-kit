@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Traits;
 
 use App\Models\ModelLock;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
