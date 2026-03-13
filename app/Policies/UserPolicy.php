@@ -30,7 +30,7 @@ class UserPolicy
 
     public function delete(User $user, User $model): bool
     {
-        if ($user->isLocked()) {
+        if ($model->isLocked()) {
             return false;
         }
 
