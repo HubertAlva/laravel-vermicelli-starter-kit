@@ -37,7 +37,7 @@ defineOptions({
     inheritAttrs: false,
 });
 
-const model = defineModel<string | undefined | null>();
+const model = defineModel<string | null>();
 
 const open = ref(false);
 

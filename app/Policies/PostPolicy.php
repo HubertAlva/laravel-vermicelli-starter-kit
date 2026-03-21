@@ -15,16 +15,16 @@ class PostPolicy
         return $user->can('posts.viewAny');
     }
 
-    public function view(User $user, Post $post): bool
+    public function view(?User $user, Post $post): bool
     {
         if ($post->published_at) {
             return true;
         }
 
-        if ($user->can('posts.view.unpublished')) {
+        if ($user && $user->can('posts.view.unpublished')) {
             return true;
         }
-        
+
         return false;
     }
 

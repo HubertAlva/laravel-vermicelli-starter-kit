@@ -12,7 +12,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { useSoftDelete } from '@/composables/useSoftDelete';
 import { useUnsavedChanges } from '@/composables/useUnsavedChanges';
 import AdminLayout from '@/layouts/AdminLayout.vue';
-import { cn, truncateText } from '@/lib/utils';
+import { cn, formatDateTime, truncateText } from '@/lib/utils';
 import Tooltip from '@/plugins/Tooltip.vue';
 import posts from '@/routes/admin/posts';
 import blog from '@/routes/blog';
@@ -106,11 +106,7 @@ useUnsavedChanges(() => form.isDirty);
                         variant="destructive"
                     >
                         Eliminado el
-                        {{
-                            new Date(form.deleted_at).toLocaleDateString(
-                                'es-PE',
-                            )
-                        }}
+                        {{ formatDateTime(form.deleted_at) }}
                     </Badge>
                 </Heading>
 

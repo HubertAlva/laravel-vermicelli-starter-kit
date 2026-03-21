@@ -17,9 +17,13 @@ import { cn } from '@/lib/utils';
 import type { DateValue } from '@internationalized/date';
 import {
     DateFormatter,
-    getLocalTimeZone,
-    parseDate,
+    parseAbsolute,
+    parseZonedDateTime,
+    Time,
+    toCalendarDate,
+    toCalendarDateTime,
     today,
+    toZoned,
 } from '@internationalized/date';
 import { CalendarIcon } from 'lucide-vue-next';
 import { computed, ref, watch } from 'vue';
@@ -28,15 +32,20 @@ interface Props {
     label?: string;
     description?: string;
     error?: string;
+    locale?: string;
+    timeZone?: string;
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+    locale: 'es-PE',
+    timeZone: 'America/Lima',
+});
 
 defineOptions({
     inheritAttrs: false,
 });
 
-const model = defineModel<string | undefined>();
+const model = defineModel<string | null>();
 
 const emit = defineEmits<{
     (e: 'validate'): void;
@@ -44,34 +53,52 @@ const emit = defineEmits<{
 
 const open = ref(false);
 
-const defaultPlaceholder = today(getLocalTimeZone());
+const defaultPlaceholder = today(props.timeZone);
 
 const time = ref('00:00:00');
+
+function parseModel(value: string) {
+    try {
+        // Case 1: UTC string (Z)
+        return parseAbsolute(value, props.timeZone);
+    } catch {
+        try {
+            // Case 2: Laravel serialized timezone string
+            return parseZonedDateTime(value);
+        } catch {
+            return null;
+        }
+    }
+}
+
+function buildAbsolute(value: DateValue, timeStr: string) {
+    if (!isValidTime(timeStr)) return null;
+
+    const [h, m, s] = timeStr.split(':').map(Number);
+
+    const dateTime = toCalendarDateTime(value, new Time(h, m, s));
+
+    return toZoned(dateTime, props.timeZone).toAbsoluteString();
+}
 
 const dateValue = computed<DateValue | undefined>({
     get() {
         if (!model.value) return undefined;
 
-        const date = new Date(model.value);
+        const parsed = parseModel(model.value);
+        if (!parsed) return undefined;
 
-        return parseDate(date.toISOString().slice(0, 10));
+        return toCalendarDate(parsed);
     },
 
     set(value) {
         if (!value) {
-            model.value = undefined;
+            model.value = null;
             return;
         }
 
-        if (!isValidTime(time.value)) return;
-
-        const date = value.toDate(getLocalTimeZone());
-
-        const [h, m, s] = time.value.split(':');
-
-        date.setHours(Number(h), Number(m), Number(s));
-
-        model.value = date.toISOString();
+        const result = buildAbsolute(value, time.value);
+        if (result) model.value = result;
     },
 });
 
@@ -80,13 +107,12 @@ watch(
     (value) => {
         if (!value) return;
 
-        const d = new Date(value);
+        const zdt = parseModel(value);
+        if (!zdt) return;
 
-        const hh = String(d.getHours()).padStart(2, '0');
-        const mm = String(d.getMinutes()).padStart(2, '0');
-        const ss = String(d.getSeconds()).padStart(2, '0');
-
-        time.value = `${hh}:${mm}:${ss}`;
+        time.value = [zdt.hour, zdt.minute, zdt.second]
+            .map((v) => String(v).padStart(2, '0'))
+            .join(':');
     },
     { immediate: true },
 );
@@ -94,19 +120,22 @@ watch(
 watch(time, () => {
     if (!dateValue.value) return;
 
-    if (!isValidTime(time.value)) return;
-
-    const date = dateValue.value.toDate(getLocalTimeZone());
-
-    const [h, m, s] = time.value.split(':');
-
-    date.setHours(Number(h), Number(m), Number(s));
-
-    model.value = date.toISOString();
+    const result = buildAbsolute(dateValue.value, time.value);
+    if (result) model.value = result;
 });
 
-const df = new DateFormatter('es-PE', {
+const df = new DateFormatter(props.locale, {
     dateStyle: 'long',
+    timeZone: props.timeZone,
+});
+
+const formattedDate = computed(() => {
+    if (!model.value) return null;
+
+    const parsed = parseModel(model.value);
+    if (!parsed) return null;
+
+    return df.format(parsed.toDate());
 });
 
 function handleModelUpdate() {
@@ -139,13 +168,7 @@ function isValidTime(value: string) {
                         "
                     >
                         <CalendarIcon class="mr-2 h-4 w-4" />
-                        {{
-                            dateValue
-                                ? df.format(
-                                      dateValue.toDate(getLocalTimeZone()),
-                                  )
-                                : 'Selecciona una fecha'
-                        }}
+                        {{ formattedDate ?? 'Selecciona una fecha' }}
                     </Button>
                 </PopoverTrigger>
 

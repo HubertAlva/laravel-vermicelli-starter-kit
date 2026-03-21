@@ -14,6 +14,7 @@ use App\Models\Post;
 use App\Services\ImageConversionService;
 use App\Traits\HandleMediaUploads;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;

@@ -55,7 +55,7 @@ defineProps<{
                     <time
                         class="text-[10px] font-medium tracking-widest text-muted-foreground/60 uppercase"
                     >
-                        {{ formatDate(post.created_at, 'short') }}
+                        {{ formatDate(post.created_at, { month: 'short' }) }}
                     </time>
                 </div>
                 <h3

@@ -27,22 +27,45 @@ export function truncateText(text: string, maxLength: number = 100) {
     return text.substring(0, maxLength) + '...';
 }
 
-export function formatDate(date: string | undefined, format = 'long') {
+export function formatDate(
+    date: string | undefined,
+    options?: Intl.DateTimeFormatOptions,
+    locale = import.meta.env.VITE_DATE_LOCALE,
+    timeZone = import.meta.env.VITE_DATE_TIMEZONE,
+) {
     if (!date) return '';
 
-    if (format === 'long') {
-        return new Date(date).toLocaleDateString('es-PE', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-        });
-    } else if (format === 'short') {
-        return new Date(date).toLocaleDateString('es-PE', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-        });
-    }
+    const defaultOptions: Intl.DateTimeFormatOptions = {
+        timeZone,
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+    };
+
+    return new Date(date).toLocaleDateString(locale, {
+        ...defaultOptions,
+        ...options,
+    });
+}
+
+export function formatDateTime(
+    date: string | undefined,
+    options?: Intl.DateTimeFormatOptions,
+    locale = import.meta.env.VITE_DATE_LOCALE,
+    timeZone = import.meta.env.VITE_DATE_TIMEZONE,
+): string | undefined {
+    if (!date) return '';
+
+    const defaultOptions: Intl.DateTimeFormatOptions = {
+        timeZone,
+        dateStyle: 'short',
+        timeStyle: 'short',
+    };
+
+    return new Date(date).toLocaleString(locale, {
+        ...defaultOptions,
+        ...options,
+    });
 }
 
 export function renderMarkdown(content: string) {

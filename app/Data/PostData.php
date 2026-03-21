@@ -2,6 +2,7 @@
 
 namespace App\Data;
 
+use Carbon\Carbon;
 use DateTime;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Attributes\WithTransformer;
@@ -24,7 +25,7 @@ class PostData extends Data
         public Optional|string   $thumbnail,
         #[WithCast(DateTimeInterfaceCast::class)]
         #[WithTransformer(DateTimeInterfaceTransformer::class)]
-        public Optional|DateTime $published_at,
+        public ?DateTime         $published_at,
         #[WithCast(DateTimeInterfaceCast::class)]
         #[WithTransformer(DateTimeInterfaceTransformer::class)]
         public Optional|DateTime $created_at,

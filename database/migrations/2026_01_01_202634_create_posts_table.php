@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->string('slug')->unique();
             $table->text('excerpt')->nullable();
             $table->longText('content');
-            $table->datetime('published_at')->nullable()->index();
+            $table->dateTime('published_at')->nullable()->index();
             $table->timestamps();
             $table->softDeletes();
         });

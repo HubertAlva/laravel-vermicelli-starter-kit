@@ -24,7 +24,7 @@ slug: string;
 excerpt: string;
 content: string;
 thumbnail?: string;
-published_at?: string;
+published_at: string | null;
 created_at?: string;
 updated_at?: string;
 deleted_at: string | null;
@@ -69,7 +69,7 @@ file: any | string | null;
 combobox: string | number | null;
 checkbox: boolean;
 date: any;
-datetime: any;
+datetime: string;
 };
 export type UserData = {
 id: number;
