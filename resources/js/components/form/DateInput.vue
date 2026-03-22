@@ -2,10 +2,13 @@
 import type { DateValue } from '@internationalized/date';
 import {
     DateFormatter,
-    getLocalTimeZone,
     parseAbsolute,
-    parseDate,
+    parseZonedDateTime,
+    Time,
+    toCalendarDate,
+    toCalendarDateTime,
     today,
+    toZoned,
 } from '@internationalized/date';
 
 import { Button } from '@/components/ui/button';
@@ -21,7 +24,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { cn, dateLocale, dateTimeZone } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
@@ -29,9 +32,14 @@ interface Props {
     label?: string;
     description?: string;
     error?: string;
+    locale?: string;
+    timeZone?: string;
 }
 
-const props = defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+    locale: dateLocale,
+    timeZone: dateTimeZone,
+});
 
 defineOptions({
     inheritAttrs: false,
@@ -45,35 +53,58 @@ const emit = defineEmits<{
     (e: 'validate'): void;
 }>();
 
-const defaultPlaceholder = today(getLocalTimeZone());
+const defaultPlaceholder = today(props.timeZone);
+
+function parseModel(value: string) {
+    try {
+        return parseAbsolute(value, props.timeZone);
+    } catch {
+        try {
+            return parseZonedDateTime(value);
+        } catch {
+            return null;
+        }
+    }
+}
+
+function buildAbsolute(value: DateValue) {
+    const dateTime = toCalendarDateTime(value, new Time(12, 0, 0));
+
+    return toZoned(dateTime, props.timeZone).toAbsoluteString();
+}
 
 const dateValue = computed<DateValue | undefined>({
     get() {
         if (!model.value) return undefined;
 
-        // DATE ONLY (like 2026-03-05)
-        if (model.value.length === 10) {
-            return parseDate(model.value);
-        }
+        const parsed = parseModel(model.value);
+        if (!parsed) return undefined;
 
-        // ISO datetime (like 2026-03-05T19:12:36-05:00)
-        return parseAbsolute(model.value, getLocalTimeZone());
+        return toCalendarDate(parsed);
     },
 
     set(value) {
         if (!value) {
-            model.value = undefined;
+            model.value = null;
             return;
         }
 
-        const date = value.toDate(getLocalTimeZone());
-
-        model.value = date.toISOString().slice(0, 10);
+        model.value = buildAbsolute(value);
     },
 });
 
-const df = new DateFormatter('es-PE', {
+const df = new DateFormatter(props.locale, {
     dateStyle: 'long',
+    timeZone: props.timeZone,
+});
+
+const formattedDate = computed(() => {
+    if (!model.value) return null;
+
+    const parsed = parseModel(model.value);
+    if (!parsed) return null;
+
+    return df.format(parsed.toDate());
 });
 
 function handleModelUpdate() {
@@ -101,11 +132,7 @@ function handleModelUpdate() {
                     variant="outline"
                 >
                     <CalendarIcon class="mr-2 h-4 w-4" />
-                    {{
-                        dateValue
-                            ? df.format(dateValue.toDate(getLocalTimeZone()))
-                            : 'Selecciona una fecha'
-                    }}
+                    {{ formattedDate ?? 'Selecciona una fecha' }}
                 </Button>
             </PopoverTrigger>
 

@@ -13,7 +13,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
+import { cn, dateLocale, dateTimeZone } from '@/lib/utils';
 import type { DateValue } from '@internationalized/date';
 import {
     DateFormatter,
@@ -37,8 +37,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    locale: 'es-PE',
-    timeZone: 'America/Lima',
+    locale: dateLocale,
+    timeZone: dateTimeZone,
 });
 
 defineOptions({

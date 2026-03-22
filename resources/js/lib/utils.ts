@@ -27,11 +27,14 @@ export function truncateText(text: string, maxLength: number = 100) {
     return text.substring(0, maxLength) + '...';
 }
 
+export const dateLocale: string = import.meta.env.VITE_DATE_LOCALE;
+export const dateTimeZone: string = import.meta.env.VITE_DATE_TIMEZONE;
+
 export function formatDate(
     date: string | undefined,
     options?: Intl.DateTimeFormatOptions,
-    locale = import.meta.env.VITE_DATE_LOCALE,
-    timeZone = import.meta.env.VITE_DATE_TIMEZONE,
+    locale = dateLocale,
+    timeZone = dateTimeZone,
 ) {
     if (!date) return '';
 
@@ -51,8 +54,8 @@ export function formatDate(
 export function formatDateTime(
     date: string | undefined,
     options?: Intl.DateTimeFormatOptions,
-    locale = import.meta.env.VITE_DATE_LOCALE,
-    timeZone = import.meta.env.VITE_DATE_TIMEZONE,
+    locale = dateLocale,
+    timeZone = dateTimeZone,
 ): string | undefined {
     if (!date) return '';
 
