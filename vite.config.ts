@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
 
     return {
         server: {
-            host: '127.0.0.1',
+            host: env.VITE_APP_DOMAIN,
             port: 5173,
             strictPort: true,
             hmr: {

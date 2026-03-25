@@ -33,8 +33,9 @@ class TestFormData extends Data
         public UploadedFile|string|null $file,
         public string|int|null          $combobox,
         public bool                     $checkbox,
-        #[WithCast(DateTimeInterfaceCast::class)]
-        public DateTimeInterface        $date,
+        #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d\TH:i:s.vP')]
+        #[WithTransformer(DateTimeInterfaceTransformer::class)]
+        public DateTime                 $date,
         #[WithCast(DateTimeInterfaceCast::class, format: 'Y-m-d\TH:i:s.vP')]
         #[WithTransformer(DateTimeInterfaceTransformer::class)]
         public DateTime                 $datetime,

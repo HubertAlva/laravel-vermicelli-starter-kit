@@ -18,8 +18,6 @@ class PostFactory extends Factory
             'excerpt' => $this->faker->word(),
             'content' => $this->faker->word(),
             'published_at' => Carbon::now(),
-//            'created_at' => Carbon::now(),
-//            'updated_at' => Carbon::now(),
         ];
     }
 }
