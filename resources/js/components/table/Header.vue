@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { HeaderProps } from '@/table/types';
 import { router } from '@inertiajs/vue3';
 import { useFocus } from '@vueuse/core';
-import { debounce } from 'lodash';
+import { debounce } from 'es-toolkit/function';
 import { Search } from 'lucide-vue-next';
 import { shallowRef } from 'vue';
 

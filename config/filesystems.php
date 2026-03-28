@@ -52,7 +52,7 @@ return [
             'root' => storage_path('app/public/editor/tmp'),
             'url' => env('APP_URL') . '/storage/editor/tmp',
             'visibility' => 'public',
-            'throw' => false,
+            'throw' => true,
             'report' => false,
         ],
 

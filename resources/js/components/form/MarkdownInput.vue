@@ -8,7 +8,6 @@ import {
 import { cn } from '@/lib/utils';
 import editor from '@/routes/admin/editor';
 import ES_ES from '@vavt/cm-extension/dist/locale/es-ES';
-import axios from 'axios';
 import { config, MdEditor, type ToolbarNames } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import type { HTMLAttributes } from 'vue';
@@ -57,25 +56,51 @@ if (props.extraToolbarsExclude) {
     toolbarsExclude.push(...props.extraToolbarsExclude);
 }
 
+const getXsrfToken = () => {
+    const match = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('XSRF-TOKEN='));
+
+    return match ? decodeURIComponent(match.split('=')[1]) : '';
+};
+
 const onUploadImg = async (
     files: File[],
     callback: (urls: string[]) => void,
 ) => {
     try {
-        const formData = new FormData();
+        const xsrfToken = getXsrfToken();
 
-        // Append all the files to FormData
-        files.forEach((file) => formData.append('image', file));
+        const uploads = files.map(async (file) => {
+            const formData = new FormData();
+            formData.append('image', file);
 
-        // Send POST request to backend with image data
-        const response = await axios.post(editor.upload().url, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
+            const response = await fetch(editor.upload().url, {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin',
+                headers: {
+                    'X-XSRF-TOKEN': xsrfToken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            });
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`Upload failed: ${response.status} - ${text}`);
+            }
+
+            const data = await response.json();
+
+            if (!data.url) {
+                throw new Error('Invalid response: missing URL');
+            }
+
+            return data.url;
         });
 
-        // Callback to update the editor with the uploaded image URL
-        callback([response.data.url]);
+        const urls = await Promise.all(uploads);
+        callback(urls);
     } catch (error) {
         console.error('Image upload failed:', error);
     }

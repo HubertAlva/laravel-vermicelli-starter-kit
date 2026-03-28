@@ -87,21 +87,108 @@ apachectl -S
 
 ---
 
-## 4 Set correct permissions (IMPORTANT)
+Here is a clean, updated version of your README section that reflects the improved approach and promotes the global utility.
 
-Apache runs as `www-data`. Your user must share access.
+---
 
-### Recommended permissions (project-level)
+## 4. Set correct permissions (IMPORTANT)
+
+Apache runs as `www-data`, so your project must allow the web server to write to specific directories.
+
+Instead of applying broad permissions to the entire project, use a reusable utility that applies **secure, minimal permissions**.
+
+---
+
+### Recommended: Global Laravel permissions utility
+
+Create a global command to fix permissions in any Laravel project.
+
+#### 1. Create the script
 
 ```bash
-sudo chown -R $USER:www-data /var/www/my-project
-sudo chmod -R 775 /var/www/my-project
+sudo nano /usr/local/bin/laravel-perm
 ```
 
-This prevents errors like:
+Paste:
+
+```bash
+#!/bin/bash
+
+OWNER=${SUDO_USER:-$USER}
+
+echo "Fixing Laravel permissions in $(pwd)..."
+
+# Ensure it's a Laravel project
+if [ ! -f "artisan" ]; then
+    echo "Not a Laravel project (artisan not found). Aborting."
+    exit 1
+fi
+
+# 1. Ownership
+sudo chown -R $OWNER:www-data .
+
+# 2. Base permissions
+sudo find . -type d -exec chmod 755 {} \;
+sudo find . -type f -exec chmod 644 {} \;
+
+# 3. Laravel writable directories
+if [ -d "storage" ] && [ -d "bootstrap/cache" ]; then
+    sudo chown -R $OWNER:www-data storage bootstrap/cache
+    sudo chmod -R 775 storage bootstrap/cache
+    sudo find storage bootstrap/cache -type d -exec chmod g+s {} \;
+    echo "Laravel storage permissions set."
+fi
+
+# 4. .env (local development)
+if [ -f ".env" ]; then
+    chmod 644 .env
+fi
+
+echo "Done."
+```
+
+---
+
+#### 2. Make it executable
+
+```bash
+sudo chmod +x /usr/local/bin/laravel-perm
+```
+
+---
+
+#### 3. Usage
+
+From your project root:
+
+```bash
+laravel-perm
+```
+
+---
+
+### Why this approach?
+
+* Applies **least-privilege permissions**
+* Avoids over-permissioning the entire project
+* Ensures Laravel can write to:
+
+    * `storage/`
+    * `bootstrap/cache/`
+* Prevents common errors like:
 
 ```
-file_put_contents(... Permission denied)
+file_put_contents(...): Permission denied
+```
+
+---
+
+### Note
+
+For production environments, consider restricting `.env` further:
+
+```bash
+chmod 600 .env
 ```
 
 ---
