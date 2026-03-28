@@ -116,7 +116,7 @@ Paste:
 
 OWNER=${SUDO_USER:-$USER}
 
-echo "Fixing Laravel permissions in $(pwd)..."
+echo "Applying permissions in $(pwd)..."
 
 # Ensure it's a Laravel project
 if [ ! -f "artisan" ]; then
@@ -124,24 +124,28 @@ if [ ! -f "artisan" ]; then
     exit 1
 fi
 
-# 1. Ownership
+# 1. Ownership (you + web server group)
 sudo chown -R $OWNER:www-data .
 
-# 2. Base permissions
-sudo find . -type d -exec chmod 755 {} \;
-sudo find . -type f -exec chmod 644 {} \;
+# 2. Make everything readable/writable
+sudo chmod -R 777 .
 
-# 3. Laravel writable directories
-if [ -d "storage" ] && [ -d "bootstrap/cache" ]; then
-    sudo chown -R $OWNER:www-data storage bootstrap/cache
-    sudo chmod -R 775 storage bootstrap/cache
-    sudo find storage bootstrap/cache -type d -exec chmod g+s {} \;
-    echo "Laravel storage permissions set."
+# 3. Ensure executables still work (Node + Composer binaries)
+if [ -d "node_modules/.bin" ]; then
+    chmod -R 755 node_modules/.bin
 fi
 
-# 4. .env (local development)
+if [ -d "vendor/bin" ]; then
+    chmod -R 755 vendor/bin
+fi
+
+# 4. Ensure Laravel writable dirs (redundant but explicit)
+mkdir -p storage bootstrap/cache
+chmod -R 777 storage bootstrap/cache
+
+# 5. .env (fully editable)
 if [ -f ".env" ]; then
-    chmod 644 .env
+    chmod 666 .env
 fi
 
 echo "Done."
@@ -169,27 +173,26 @@ laravel-perm
 
 ### Why this approach?
 
-* Applies **least-privilege permissions**
-* Avoids over-permissioning the entire project
-* Ensures Laravel can write to:
+* Removes permissions as a source of bugs entirely
+* Ensures **everything is writable**, so nothing breaks during development
+* Explicitly restores executable permissions for:
 
-    * `storage/`
-    * `bootstrap/cache/`
+    * `node_modules/.bin`
+    * `vendor/bin`
 * Prevents common errors like:
 
 ```
 file_put_contents(...): Permission denied
+sh: 1: concurrently: Permission denied
 ```
 
 ---
 
 ### Note
 
-For production environments, consider restricting `.env` further:
+This setup is intentionally **fully permissive (`777`)** and is designed **only for local development**.
 
-```bash
-chmod 600 .env
-```
+Do **not** use this approach in production environments.
 
 ---
 
