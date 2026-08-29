@@ -1,22 +1,23 @@
 {
     "agents": [
-        "junie"
+        "claude_code"
     ],
+    "cloud": false,
     "guidelines": true,
-    "herd_mcp": false,
     "mcp": true,
-    "nightwatch_mcp": false,
+    "nightwatch": false,
     "packages": [
-        "laravel/fortify",
         "spatie/laravel-medialibrary"
     ],
     "sail": false,
     "skills": [
+        "infer-conventions",
+        "fortify-development",
+        "laravel-best-practices",
+        "testing-best-practices",
         "wayfinder-development",
-        "pest-testing",
         "inertia-vue-development",
         "tailwindcss-development",
-        "developing-with-fortify",
         "medialibrary-development"
     ]
 }
