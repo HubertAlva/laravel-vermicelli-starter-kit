@@ -13,13 +13,13 @@ class PageBlogController extends Controller
 {
     public function index(): Response
     {
-        $posts = Post::with('tags')
+        $posts = Post::with(['tags', 'media'])
             ->whereNotNull('published_at')
             ->orderBy('created_at', 'desc')
             ->paginate(12);
 
         return Inertia::render('blog/index/Page', [
-            'posts' => Inertia::defer(fn() => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data')),
+            'posts' => Inertia::defer(fn () => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data')),
         ]);
     }
 

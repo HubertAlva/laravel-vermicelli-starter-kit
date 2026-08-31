@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Actions\Admin\GetIndexData;
 use App\Actions\Post\Create;
 use App\Actions\Post\Update;
-use App\Data\PostFormData;
 use App\Data\PostData;
+use App\Data\PostFormData;
 use App\Filters\SearchFilter;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
@@ -14,7 +14,6 @@ use App\Models\Post;
 use App\Services\ImageConversionService;
 use App\Traits\HandleMediaUploads;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -39,15 +38,17 @@ class PostController extends Controller
 
         $posts = $action->execute(
             model: Post::class,
+            with: ['tags', 'media'],
             allowedFilters: [
                 AllowedFilter::custom('search', new SearchFilter(['name', 'slug'])), AllowedFilter::trashed(),
             ],
         );
 
         return Inertia::render('admin/posts/index/Page', [
-            'posts' => Inertia::defer(fn() => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data')),
+            'posts' => Inertia::defer(fn () => PostData::collect($posts, PaginatedDataCollection::class)->wrap('data')),
             'filters' => [
                 'search' => request('filter.search'),
+                'per_page' => request()->integer('per_page', 10),
                 'trashed' => request('filter.trashed'),
             ],
         ]);

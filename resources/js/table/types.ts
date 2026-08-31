@@ -7,6 +7,26 @@ export type TrashedFilter = 'with' | 'only' | undefined;
 export type Filters = {
     search?: string;
     trashed?: TrashedFilter;
+    per_page?: number;
+};
+
+export type CustomFilters = Record<string, string | undefined>;
+
+export type TableFilterOption = {
+    label: string;
+    value: string;
+};
+
+export type TableFilter = {
+    id: string;
+    label: string;
+    type: string;
+    options: TableFilterOption[];
+};
+
+export type StatusOption = {
+    label: string;
+    value: string;
 };
 
 // Table Base props
@@ -17,6 +37,8 @@ export type BaseProps<TData> = {
 // Table Header props
 export type HeaderProps<TData> = BaseProps<TData> & {
     showTrashedFilter?: boolean;
+    // statusOptions?: StatusOption[];
+    customFilterDefinitions?: TableFilter[];
 };
 
 // Table Body props
@@ -46,4 +68,6 @@ export type IndexTableProps<TData, TValue> = {
     onRowLeave?: () => void;
     deferredData: string;
     showTrashedFilter?: boolean;
+    customFilters?: CustomFilters;
+    customFilterDefinitions?: TableFilter[];
 };

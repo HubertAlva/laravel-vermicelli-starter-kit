@@ -5,7 +5,7 @@ use App\Http\Controllers\PageContactController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-require __DIR__ . '/admin.php';
+require __DIR__.'/admin.php';
 
 Route::domain(config('app.app_domain'))->group(function () {
     Route::get('/', function () {
@@ -22,5 +22,5 @@ Route::domain(config('app.app_domain'))->group(function () {
         return Inertia::render('Dashboard');
     })->middleware(['auth', 'verified'])->name('dashboard');
 
-    require __DIR__ . '/settings.php';
+    require __DIR__.'/settings.php';
 });

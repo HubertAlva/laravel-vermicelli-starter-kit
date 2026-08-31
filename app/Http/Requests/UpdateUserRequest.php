@@ -17,14 +17,14 @@ class UpdateUserRequest extends FormRequest
                 'lowercase',
                 'email',
                 'max:255',
-                Rule::unique('users')->ignore($this->route('user')->id ?? null)
+                Rule::unique('users')->ignore($this->route('user')->id ?? null),
             ],
             'role' => 'nullable|string|in:admin',
             'password' => [
                 'nullable',
                 Password::default(),
-                'confirmed'
-            ]
+                'confirmed',
+            ],
         ];
     }
 

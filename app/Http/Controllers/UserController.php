@@ -27,15 +27,17 @@ class UserController extends Controller
 
         $users = $action->execute(
             model: User::class,
+            with: ['roles'],
             allowedFilters: [
                 AllowedFilter::custom('search', new SearchFilter(['name', 'email'])),
             ],
         );
 
         return Inertia::render('admin/users/index/Page', [
-            'users' => Inertia::defer(fn() => UserData::collect($users, PaginatedDataCollection::class)->wrap('data')),
+            'users' => Inertia::defer(fn () => UserData::collect($users, PaginatedDataCollection::class)->wrap('data')),
             'filters' => [
                 'search' => request('filter.search'),
+                'per_page' => request()->integer('per_page', 10),
             ],
         ]);
     }

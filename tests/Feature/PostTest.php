@@ -108,6 +108,75 @@ class PostTest extends TestCase
         );
     }
 
+    public function test_posts_can_be_created_through_the_store_endpoint()
+    {
+        Storage::fake('posts');
+
+        $response = $this->post(route('admin.posts.store'), [
+            'name' => 'HTTP Created Post',
+            'excerpt' => 'Short description',
+            'content' => 'Lorem ipsum',
+            'published_at' => true,
+            'is_new_thumbnail' => false,
+            'tags' => ['tag1'],
+        ]);
+
+        $response->assertRedirect(route('admin.posts.index'));
+
+        $this->assertDatabaseHas('posts', [
+            'name' => 'HTTP Created Post',
+        ]);
+    }
+
+    public function test_store_post_fails_validation_when_required_fields_are_missing()
+    {
+        $response = $this->post(route('admin.posts.store'), []);
+
+        $response->assertSessionHasErrors(['name', 'excerpt', 'content']);
+
+        $this->assertDatabaseCount('posts', 0);
+    }
+
+    public function test_posts_can_be_updated_through_the_update_endpoint()
+    {
+        $post = Post::factory()->create();
+
+        $response = $this->post(route('admin.posts.update', $post), [
+            'name' => 'HTTP Updated Post',
+            'excerpt' => 'Short description',
+            'content' => 'Lorem ipsum',
+            'published_at' => true,
+            'is_new_thumbnail' => false,
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('posts', [
+            'id' => $post->id,
+            'name' => 'HTTP Updated Post',
+        ]);
+    }
+
+    public function test_users_without_the_posts_create_permission_are_forbidden_from_creating_posts()
+    {
+        $user = User::factory()->create();
+        $user->givePermissionTo('admin.view');
+
+        $response = $this->actingAs($user)->post(route('admin.posts.store'), [
+            'name' => 'Should Not Be Created',
+            'excerpt' => 'Short description',
+            'content' => 'Lorem ipsum',
+            'published_at' => true,
+            'is_new_thumbnail' => false,
+        ]);
+
+        $response->assertForbidden();
+
+        $this->assertDatabaseMissing('posts', [
+            'name' => 'Should Not Be Created',
+        ]);
+    }
+
     public function test_posts_can_be_deleted()
     {
         $post = Post::factory()->create();

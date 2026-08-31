@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 
 class TestFormRequest extends FormRequest
@@ -36,7 +35,7 @@ class TestFormRequest extends FormRequest
             'combobox' => 'required|numeric',
             'checkbox' => 'required|accepted',
             'date' => 'required|date',
-            'datetime' => 'required|date'
+            'datetime' => 'required|date',
         ];
     }
 

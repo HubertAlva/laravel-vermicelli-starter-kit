@@ -9,19 +9,16 @@ class EditorContentProcessorService
 {
     public function __construct(
         protected ImageConversionService $conversionService,
-    )
-    {
-    }
+    ) {}
 
     public function process(
-        Model  $model,
+        Model $model,
         string $content,
         string $collection,
         string $disk
-    ): string
-    {
+    ): string {
         preg_match_all(
-            '#' . preg_quote(config('app.url')) . '/storage/editor/tmp/[^\)"\s]+#',
+            '#'.preg_quote(config('app.url')).'/storage/editor/tmp/[^\)"\s]+#',
             $content,
             $matches
         );
@@ -49,24 +46,23 @@ class EditorContentProcessorService
     }
 
     protected function attachEditorImages(
-        Model  $model,
-        array  $tmpUrls,
+        Model $model,
+        array $tmpUrls,
         string $collection,
         string $disk
-    ): array
-    {
+    ): array {
         $replacements = [];
 
         foreach ($tmpUrls as $tmpUrl) {
             $tmpPath = str_replace(
-                config('app.url') . '/storage/',
+                config('app.url').'/storage/',
                 '',
                 $tmpUrl
             );
 
-            $absolutePath = storage_path('app/public/' . $tmpPath);
+            $absolutePath = storage_path('app/public/'.$tmpPath);
 
-            if (!file_exists($absolutePath)) {
+            if (! file_exists($absolutePath)) {
                 continue;
             }
 
@@ -88,16 +84,15 @@ class EditorContentProcessorService
     }
 
     public function sync(
-        Model  $model,
+        Model $model,
         string $oldContent,
         string $newContent,
         string $collection,
         string $disk
-    ): string
-    {
+    ): string {
         preg_match_all('#/storage/posts/\d+/[^\)"\s]+#', $oldContent, $oldMatches);
         preg_match_all('#/storage/posts/\d+/[^\)"\s]+#', $newContent, $newMatches);
-        preg_match_all('#' . preg_quote(config('app.url')) . '/storage/editor/tmp/[^\)"\s]+#', $newContent, $tmpMatches);
+        preg_match_all('#'.preg_quote(config('app.url')).'/storage/editor/tmp/[^\)"\s]+#', $newContent, $tmpMatches);
 
         $oldImages = collect($oldMatches[0]);
         $newImages = collect($newMatches[0]);
@@ -114,7 +109,7 @@ class EditorContentProcessorService
                 ->delete();
         }
 
-        if (!empty($tmpImages)) {
+        if (! empty($tmpImages)) {
             $replacements = $this->attachEditorImages(
                 $model,
                 $tmpImages,
@@ -133,5 +128,4 @@ class EditorContentProcessorService
 
         return $newContent;
     }
-
 }

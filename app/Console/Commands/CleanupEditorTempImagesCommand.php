@@ -20,7 +20,7 @@ class CleanupEditorTempImagesCommand extends Command
 
             if ($lastModified < now()->subHours(2)->timestamp) {
                 Storage::disk('editor_tmp')->delete($file);
-                $this->info('Deleted temporary image: ' . $file);
+                $this->info('Deleted temporary image: '.$file);
             }
         }
     }

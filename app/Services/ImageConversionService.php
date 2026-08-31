@@ -10,11 +10,10 @@ class ImageConversionService
 {
     public function convertPathToWebp(
         string $absolutePath,
-        ?int   $width = null,
-        ?int   $height = null
-    ): string
-    {
-        if (!file_exists($absolutePath)) {
+        ?int $width = null,
+        ?int $height = null
+    ): string {
+        if (! file_exists($absolutePath)) {
             throw new RuntimeException("File not found: {$absolutePath}");
         }
 

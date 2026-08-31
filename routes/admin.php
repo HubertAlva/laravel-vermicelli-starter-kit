@@ -7,7 +7,7 @@ use App\Http\Controllers\UploadEditorImagesController;
 use App\Http\Controllers\UserController;
 
 Route::middleware(['auth', 'verified', 'permission:admin.view'])
-    ->domain('admin.' . config('app.app_domain'))
+    ->domain('admin.'.config('app.app_domain'))
     ->name('admin.')
     ->group(function () {
 

@@ -1,5 +1,5 @@
-import { onMounted, onUnmounted } from 'vue';
 import { usePage } from '@inertiajs/vue3';
+import { onMounted, onUnmounted } from 'vue';
 
 export function useUnsavedChanges(isDirty: () => boolean) {
     if (usePage().props.isLocal) return;

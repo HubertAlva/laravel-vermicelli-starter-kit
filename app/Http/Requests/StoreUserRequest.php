@@ -16,8 +16,8 @@ class StoreUserRequest extends FormRequest
             'password' => [
                 'required',
                 Password::default(),
-                'confirmed'
-            ]
+                'confirmed',
+            ],
         ];
     }
 

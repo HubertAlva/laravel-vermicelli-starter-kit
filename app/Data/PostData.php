@@ -2,7 +2,6 @@
 
 namespace App\Data;
 
-use Carbon\Carbon;
 use DateTime;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Attributes\WithTransformer;
@@ -17,15 +16,15 @@ use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 class PostData extends Data
 {
     public function __construct(
-        public int               $id,
-        public string            $name,
-        public string            $slug,
-        public string            $excerpt,
-        public string            $content,
-        public Optional|string   $thumbnail,
+        public int $id,
+        public string $name,
+        public string $slug,
+        public string $excerpt,
+        public string $content,
+        public Optional|string $thumbnail,
         #[WithCast(DateTimeInterfaceCast::class)]
         #[WithTransformer(DateTimeInterfaceTransformer::class)]
-        public ?DateTime         $published_at,
+        public ?DateTime $published_at,
         #[WithCast(DateTimeInterfaceCast::class)]
         #[WithTransformer(DateTimeInterfaceTransformer::class)]
         public Optional|DateTime $created_at,
@@ -34,9 +33,7 @@ class PostData extends Data
         public Optional|DateTime $updated_at,
         #[WithCast(DateTimeInterfaceCast::class)]
         #[WithTransformer(DateTimeInterfaceTransformer::class)]
-        public ?DateTime         $deleted_at,
-        public ?array            $tags,
-    )
-    {
-    }
+        public ?DateTime $deleted_at,
+        public ?array $tags,
+    ) {}
 }

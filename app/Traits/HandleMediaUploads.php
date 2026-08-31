@@ -10,17 +10,24 @@ use Spatie\Image\Image;
 trait HandleMediaUploads
 {
     /**
+     * Disk used to stage uploads before they're added to their media
+     * collection. Deliberately always 'public' (not the collection's own
+     * $disk) so staging never round-trips to a remote disk like S3 — only
+     * the final addMedia()->toMediaCollection($disk) call does.
+     */
+    protected const TEMP_DISK = 'public';
+
+    /**
      * Handle media upload during model creation
      */
     public function handleMediaStore(
-        Model         $model,
+        Model $model,
         ?UploadedFile $uploadedFile,
-        string        $collection,
-        string        $disk,
-        ?int          $width = null,
-        ?int          $height = null
-    ): void
-    {
+        string $collection,
+        string $disk,
+        ?int $width = null,
+        ?int $height = null
+    ): void {
         $this->handleMediaOperation($model, $uploadedFile, $collection, $disk, false, false, $width, $height);
     }
 
@@ -28,17 +35,16 @@ trait HandleMediaUploads
      * Base method for handling media operations
      */
     protected function handleMediaOperation(
-        Model         $model,
+        Model $model,
         ?UploadedFile $uploadedFile,
-        string        $collection,
-        string        $disk,
-        bool          $shouldConvertToWebp = false,
-        bool          $shouldClearCollection = false,
-        ?int          $width = null,
-        ?int          $height = null
-    ): void
-    {
-        if (!$this->isValidUpload($uploadedFile)) {
+        string $collection,
+        string $disk,
+        bool $shouldConvertToWebp = false,
+        bool $shouldClearCollection = false,
+        ?int $width = null,
+        ?int $height = null
+    ): void {
+        if (! $this->isValidUpload($uploadedFile)) {
             return;
         }
 
@@ -60,15 +66,14 @@ trait HandleMediaUploads
 
     protected function convertImage(
         UploadedFile $uploadedFile,
-        string       $collection,
-        ?int         $width = null,
-        ?int         $height = null
-    ): string
-    {
+        string $collection,
+        ?int $width = null,
+        ?int $height = null
+    ): string {
         $path = $this->storeMedia($uploadedFile, $collection);
 
         if (pathinfo($path, PATHINFO_EXTENSION) !== 'webp') {
-            $webpPath = str_replace('.' . pathinfo($path, PATHINFO_EXTENSION), '.webp', $path);
+            $webpPath = str_replace('.'.pathinfo($path, PATHINFO_EXTENSION), '.webp', $path);
         } else {
             $webpPath = $path;
         }
@@ -90,29 +95,29 @@ trait HandleMediaUploads
 
     protected function storeMedia(UploadedFile $uploadedFile, string $collection): string
     {
-        $storedFile = $uploadedFile->store($collection, 'public');
+        $storedFile = $uploadedFile->store($collection, self::TEMP_DISK);
+
         return $this->getStoragePath($storedFile);
     }
 
     protected function getStoragePath(string $storedFile): string
     {
-        return storage_path("app/public/{$storedFile}");
+        return storage_path('app/'.self::TEMP_DISK."/{$storedFile}");
     }
 
     /**
      * Handle media upload and replacement during model update
      */
     public function handleMediaUpdate(
-        Model         $model,
-        bool          $isNew,
+        Model $model,
+        bool $isNew,
         ?UploadedFile $uploadedFile,
-        ?string       $mediaFieldValue,
-        string        $collection,
-        string        $disk,
-        ?int          $width = null,
-        ?int          $height = null
-    ): void
-    {
+        ?string $mediaFieldValue,
+        string $collection,
+        string $disk,
+        ?int $width = null,
+        ?int $height = null
+    ): void {
         if ($isNew) {
             $this->handleMediaOperation($model, $uploadedFile, $collection, $disk, false, true, $width, $height);
         } elseif (is_null($mediaFieldValue)) {
@@ -124,14 +129,13 @@ trait HandleMediaUploads
      * Handle image upload during model creation
      */
     public function handleImageStore(
-        Model         $model,
+        Model $model,
         ?UploadedFile $uploadedFile,
-        string        $collection,
-        string        $disk,
-        ?int          $width = null,
-        ?int          $height = null
-    ): void
-    {
+        string $collection,
+        string $disk,
+        ?int $width = null,
+        ?int $height = null
+    ): void {
         $this->handleMediaOperation($model, $uploadedFile, $collection, $disk, true, false, $width, $height);
     }
 
@@ -139,16 +143,15 @@ trait HandleMediaUploads
      * Handle image upload and replacement during model update
      */
     public function handleImageUpdate(
-        Model         $model,
-        bool          $isNew,
+        Model $model,
+        bool $isNew,
         ?UploadedFile $uploadedFile,
-        ?string       $imageFieldValue,
-        string        $collection,
-        string        $disk,
-        ?int          $width = null,
-        ?int          $height = null
-    ): void
-    {
+        ?string $imageFieldValue,
+        string $collection,
+        string $disk,
+        ?int $width = null,
+        ?int $height = null
+    ): void {
         if ($isNew) {
             $this->handleMediaOperation($model, $uploadedFile, $collection, $disk, true, true, $width, $height);
         } elseif (is_null($imageFieldValue)) {

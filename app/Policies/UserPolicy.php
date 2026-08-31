@@ -16,6 +16,8 @@ class UserPolicy
 
     public function view(User $user, User $model): bool
     {
+        // No route currently calls this; deny until users get a dedicated show view.
+        return false;
     }
 
     public function create(User $user): bool
@@ -43,9 +45,13 @@ class UserPolicy
 
     public function restore(User $user, User $model): bool
     {
+        // User does not use SoftDeletes; deny until it does.
+        return false;
     }
 
     public function forceDelete(User $user, User $model): bool
     {
+        // User does not use SoftDeletes; deny until it does.
+        return false;
     }
 }

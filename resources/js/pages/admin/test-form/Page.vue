@@ -96,9 +96,9 @@ const options = [
 
                 <HeaderActions>
                     <Button
+                        :disabled="form.processing || form.validating"
                         type="submit"
                         @click="submit"
-                        :disabled="form.processing || form.validating"
                     >
                         {{ buttonLabel }}
                         <Spinner v-if="form.validating || form.processing" />
@@ -140,19 +140,19 @@ const options = [
                                     />
 
                                     <TagsListboxInput
-                                        :options="options"
                                         v-model="form.taglistbox"
+                                        :error="form.errors.taglistbox"
+                                        :options="options"
                                         label="Multiples opciones"
                                         placeholder="Selecciona etiquetas"
-                                        :error="form.errors.taglistbox"
                                         @validate="validateField('taglistbox')"
                                     />
 
                                     <TagsInput
                                         v-model="form.tags"
                                         :error="form.errors.tags"
-                                        label="Etiquetas"
                                         :max="5"
+                                        label="Etiquetas"
                                         @validate="validateField('tags')"
                                     />
 
@@ -168,18 +168,18 @@ const options = [
                                     </div>
 
                                     <SelectInput
-                                        label="Opciones"
                                         v-model="form.select"
                                         :error="form.errors.select"
                                         :options="options"
+                                        label="Opciones"
                                         @validate="validateField('select')"
                                     />
 
                                     <RadioInput
-                                        :options="options"
-                                        label="Opciones"
                                         v-model="form.radio"
                                         :error="form.errors.radio"
+                                        :options="options"
+                                        label="Opciones"
                                         @validate="validateField('radio')"
                                     />
 

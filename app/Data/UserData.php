@@ -13,20 +13,18 @@ use Spatie\LaravelData\Transformers\DateTimeInterfaceTransformer;
 class UserData extends Data
 {
     public function __construct(
-        public int               $id,
-        public string            $name,
-        public string            $email,
+        public int $id,
+        public string $name,
+        public string $email,
         #[WithCast(DateTimeInterfaceCast::class)]
         #[WithTransformer(DateTimeInterfaceTransformer::class)]
         public Optional|DateTime $email_verified_at,
-        public Optional|string   $role,
+        public Optional|string $role,
         #[WithCast(DateTimeInterfaceCast::class)]
         #[WithTransformer(DateTimeInterfaceTransformer::class)]
         public Optional|DateTime $created_at,
         #[WithCast(DateTimeInterfaceCast::class)]
         #[WithTransformer(DateTimeInterfaceTransformer::class)]
         public Optional|DateTime $updated_at,
-    )
-    {
-    }
+    ) {}
 }

@@ -13,10 +13,10 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->name(),
+            'name' => $this->faker->unique()->sentence(6),
             'slug' => $this->faker->unique()->slug(),
-            'excerpt' => $this->faker->word(),
-            'content' => $this->faker->word(),
+            'excerpt' => $this->faker->sentence(20),
+            'content' => implode("\n\n", $this->faker->paragraphs(5)),
             'published_at' => Carbon::now(),
         ];
     }

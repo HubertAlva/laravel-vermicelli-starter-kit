@@ -1,9 +1,13 @@
 <script generic="TData, TValue" lang="ts" setup>
 import { Table, TableBody, TableFooter, TableHeader } from '@/components/table';
 import { Spinner } from '@/components/ui/spinner';
-import { IndexTableProps, TrashedFilter } from '@/table/types';
+import { IndexTableProps } from '@/table/types';
 import { Deferred, router } from '@inertiajs/vue3';
-import { getCoreRowModel, useVueTable } from '@tanstack/vue-table';
+import {
+    ColumnFiltersState,
+    getCoreRowModel,
+    useVueTable,
+} from '@tanstack/vue-table';
 import { ref, shallowRef, watch } from 'vue';
 
 const props = withDefaults(defineProps<IndexTableProps<TData, TValue>>(), {
@@ -14,8 +18,52 @@ const dataRef = shallowRef<TData[]>(props.collection?.data ?? []);
 
 const pagination = ref({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: props.filters?.per_page ?? props.collection?.meta.per_page ?? 10,
 });
+
+function buildFilters(
+    globalFilter: string,
+    columnFilters: ColumnFiltersState,
+): Record<string, string> {
+    const filters: Record<string, string> = {};
+
+    if (globalFilter) {
+        filters.search = globalFilter;
+    }
+
+    columnFilters.forEach((filter) => {
+        if (typeof filter.value === 'string' && filter.value !== '') {
+            filters[filter.id] = filter.value;
+        }
+    });
+
+    return filters;
+}
+
+const globalFilter = ref(props.filters?.search ?? '');
+
+function createColumnFilters(): ColumnFiltersState {
+    return [
+        {
+            id: 'trashed',
+            value: props.filters?.trashed,
+        },
+        ...Object.entries(props.customFilters ?? {}).map(([id, value]) => ({
+            id,
+            value,
+        })),
+    ];
+}
+
+const columnFilters = ref(createColumnFilters());
+
+function buildParams(page: number) {
+    return {
+        page,
+        per_page: pagination.value.pageSize,
+        filter: buildFilters(globalFilter.value, columnFilters.value),
+    };
+}
 
 const table = useVueTable({
     data: dataRef,
@@ -31,14 +79,13 @@ const table = useVueTable({
             return pagination.value;
         },
 
-        globalFilter: props.filters?.search ?? '',
+        get globalFilter() {
+            return globalFilter.value;
+        },
 
-        columnFilters: [
-            {
-                id: 'trashed',
-                value: props.filters?.trashed as TrashedFilter,
-            },
-        ],
+        get columnFilters() {
+            return columnFilters.value;
+        },
     },
 
     initialState: {
@@ -47,82 +94,45 @@ const table = useVueTable({
         },
     },
     onGlobalFilterChange: (updater) => {
-        const current = table.getState().globalFilter;
+        globalFilter.value =
+            typeof updater === 'function'
+                ? updater(globalFilter.value)
+                : updater;
 
-        const next = typeof updater === 'function' ? updater(current) : updater;
-
-        const trashed = table
-            .getState()
-            .columnFilters.find((f) => f.id === 'trashed')
-            ?.value as TrashedFilter;
-
-        router.get(
-            props.url,
-            {
-                page: 1,
-                filter: {
-                    search: next || undefined,
-                    trashed: trashed || undefined,
-                },
-            },
-            {
-                preserveScroll: true,
-                replace: true,
-            },
-        );
+        router.get(props.url, buildParams(1), {
+            preserveScroll: true,
+            replace: true,
+        });
     },
 
     onPaginationChange: (updater) => {
         const next =
             typeof updater === 'function' ? updater(pagination.value) : updater;
 
-        if (next.pageIndex === pagination.value.pageIndex) {
+        if (
+            next.pageIndex === pagination.value.pageIndex &&
+            next.pageSize === pagination.value.pageSize
+        ) {
             return;
         }
 
+        const pageSizeChanged = next.pageSize !== pagination.value.pageSize;
         pagination.value = next;
-
-        const trashed = table
-            .getState()
-            .columnFilters.find((f) => f.id === 'trashed')
-            ?.value as TrashedFilter;
 
         router.get(
             props.url,
-            {
-                page: next.pageIndex + 1,
-                filter: {
-                    search: table.getState().globalFilter || undefined,
-                    trashed: trashed || undefined,
-                },
-            },
-            {
-                preserveScroll: true,
-            },
+            buildParams(pageSizeChanged ? 1 : next.pageIndex + 1),
+            { preserveScroll: true },
         );
     },
 
     onColumnFiltersChange: (updater) => {
-        const current = table.getState().columnFilters;
+        columnFilters.value =
+            typeof updater === 'function'
+                ? updater(columnFilters.value)
+                : updater;
 
-        const next = typeof updater === 'function' ? updater(current) : updater;
-
-        const trashed = next.find((f) => f.id === 'trashed')
-            ?.value as TrashedFilter;
-
-        router.get(
-            props.url,
-            {
-                page: 1,
-                filter: {
-                    search: table.getState().globalFilter || undefined,
-                    trashed,
-                },
-            },
-            {
-                preserveScroll: true,
-            },
-        );
+        router.get(props.url, buildParams(1), { preserveScroll: true });
     },
 });
 
@@ -146,13 +156,30 @@ watch(
     },
     { immediate: true },
 );
+
+watch(
+    () => [props.filters?.trashed, props.customFilters],
+    () => {
+        columnFilters.value = createColumnFilters();
+    },
+    { immediate: true },
+);
+
+watch(
+    () => props.filters?.search,
+    (value) => {
+        globalFilter.value = value ?? '';
+    },
+    { immediate: true },
+);
 </script>
 
 <template>
     <Table>
         <TableHeader
-            :table="table"
+            :customFilterDefinitions="props.customFilterDefinitions"
             :showTrashedFilter="props.showTrashedFilter"
+            :table="table"
         />
 
         <Deferred :data="props.deferredData">

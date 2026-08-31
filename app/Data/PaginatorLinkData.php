@@ -9,9 +9,7 @@ class PaginatorLinkData extends Data
 {
     public function __construct(
         public Optional|string $url,
-        public string          $label,
-        public bool            $active,
-    )
-    {
-    }
+        public string $label,
+        public bool $active,
+    ) {}
 }

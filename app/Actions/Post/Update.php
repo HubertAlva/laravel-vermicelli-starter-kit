@@ -16,15 +16,17 @@ class Update
 
     public function __construct(
         private EditorContentProcessorService $contentProcessor,
-    )
-    {
-    }
+    ) {}
 
     public function execute(Post $post, PostFormData $data, ?UploadedFile $thumbnail): Post
     {
         return DB::transaction(function () use ($post, $data, $thumbnail) {
 
-            $publishedAt = $data->published_at ? Carbon::now() : null;
+            $publishedAt = match (true) {
+                ! $data->published_at => null,
+                $post->published_at !== null => $post->published_at,
+                default => Carbon::now(),
+            };
 
             $oldContent = $post->content;
             $newContent = $data->content;

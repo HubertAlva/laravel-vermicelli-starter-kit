@@ -4,9 +4,7 @@ namespace Tests\Feature;
 
 use App\Actions\User\Create;
 use App\Actions\User\Update;
-use App\Data\PostFormData;
 use App\Data\UserFormData;
-use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -79,6 +77,74 @@ class UserTest extends TestCase
 
         $this->assertDatabaseHas('users', [
             'name' => 'Updated User',
+        ]);
+    }
+
+    public function test_users_can_be_created_through_the_store_endpoint()
+    {
+        $response = $this->post(route('admin.users.store'), [
+            'name' => 'HTTP User',
+            'email' => 'httpuser@mail.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+        $response->assertRedirect(route('admin.users.index'));
+
+        $this->assertDatabaseHas('users', [
+            'email' => 'httpuser@mail.com',
+        ]);
+    }
+
+    public function test_store_user_fails_validation_when_email_is_already_taken()
+    {
+        User::factory()->create(['email' => 'taken@mail.com']);
+
+        $response = $this->post(route('admin.users.store'), [
+            'name' => 'Duplicate Email User',
+            'email' => 'taken@mail.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+        $response->assertSessionHasErrors('email');
+
+        $this->assertDatabaseCount('users', 2); // admin + the pre-existing user
+    }
+
+    public function test_users_can_be_updated_through_the_update_endpoint()
+    {
+        $user = User::factory()->create();
+
+        $response = $this->put(route('admin.users.update', $user), [
+            'name' => 'HTTP Updated User',
+            'email' => $user->email,
+        ]);
+
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'name' => 'HTTP Updated User',
+        ]);
+    }
+
+    public function test_users_without_the_users_create_permission_are_forbidden_from_creating_users()
+    {
+        $user = User::factory()->create();
+        $user->givePermissionTo('admin.view');
+
+        $response = $this->actingAs($user)->post(route('admin.users.store'), [
+            'name' => 'Should Not Be Created',
+            'email' => 'shouldnotexist@mail.com',
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+        $response->assertForbidden();
+
+        $this->assertDatabaseMissing('users', [
+            'email' => 'shouldnotexist@mail.com',
         ]);
     }
 

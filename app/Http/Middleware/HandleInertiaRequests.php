@@ -52,7 +52,7 @@ class HandleInertiaRequests extends Middleware
                         return [$permission['name'] => auth()->user()->can($permission['name'])];
                     }),
             ],
-            'sidebarOpen' => !$request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }
 }

@@ -16,9 +16,7 @@ class Create
 
     public function __construct(
         private EditorContentProcessorService $contentProcessor,
-    )
-    {
-    }
+    ) {}
 
     public function execute(PostFormData $data, ?UploadedFile $thumbnail): Post
     {

@@ -68,8 +68,8 @@ is_new_image: boolean;
 file: any | string | null;
 combobox: string | number | null;
 checkbox: boolean;
-date: any;
-datetime: string;
+date: string | null;
+datetime: string | null;
 };
 export type UserData = {
 id: number;

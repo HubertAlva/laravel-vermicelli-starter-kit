@@ -50,7 +50,7 @@ return [
         'editor_tmp' => [
             'driver' => 'local',
             'root' => storage_path('app/public/editor/tmp'),
-            'url' => env('APP_URL') . '/storage/editor/tmp',
+            'url' => env('APP_URL').'/storage/editor/tmp',
             'visibility' => 'public',
             'throw' => true,
             'report' => false,
@@ -59,7 +59,7 @@ return [
         'posts' => [
             'driver' => 'local',
             'root' => storage_path('app/public/posts'),
-            'url' => env('APP_URL') . '/storage/posts',
+            'url' => env('APP_URL').'/storage/posts',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

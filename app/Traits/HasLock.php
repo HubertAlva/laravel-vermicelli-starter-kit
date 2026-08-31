@@ -22,7 +22,7 @@ trait HasLock
     public function isLocked(): bool
     {
         if ($this->relationLoaded('lock')) {
-            return !is_null($this->lock);
+            return ! is_null($this->lock);
         }
 
         return $this->lock()->exists();
@@ -31,10 +31,9 @@ trait HasLock
     /**
      * Locks the model by creating or updating a lock with the specified reason.
      *
-     * @param string|null $reason The reason for locking the model.
-     * @return void
+     * @param  string|null  $reason  The reason for locking the model.
      */
-    public function lockModel(string $reason = null): void
+    public function lockModel(?string $reason = null): void
     {
         $this->lock()->updateOrCreate([], [
             'reason' => $reason,
