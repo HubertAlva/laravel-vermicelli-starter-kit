@@ -57,13 +57,15 @@ DB_PASSWORD=your_database_password
 
 Vermicelli is designed to work with a main domain and an admin subdomain.
 
-Update the following values in your .env file:
+Set your local domain in the `.env` file; the admin panel is served from `admin.<domain>`:
 
 ```
 APP_URL=http://yourdomain.local
-APP_DOMAIN=yourdomain.local
-SESSION_DOMAIN=.yourdomain.local
 ```
+
+`APP_DOMAIN`, `ADMIN_DOMAIN` and `SESSION_DOMAIN` are derived from `APP_URL` and only need to be set to override them.
+The session cookie is shared with the admin subdomain automatically, except on `localhost`, where browsers don't allow
+it (you'll need to log in separately at `admin.localhost`).
 
 #### Local development (recommended)
 

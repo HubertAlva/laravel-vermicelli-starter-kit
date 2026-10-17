@@ -151,12 +151,19 @@ return [
     |--------------------------------------------------------------------------
     |
     | This value determines the domain and subdomains the session cookie is
-    | available to. By default, the cookie will be available to the root
-    | domain without subdomains. Typically, this shouldn't be changed.
+    | available to. By default, it is shared between the application domain
+    | and its subdomains (e.g. the admin panel), except on hosts such as
+    | "localhost" or an IP address, where browsers reject a cookie domain.
     |
     */
 
-    'domain' => env('SESSION_DOMAIN'),
+    'domain' => env('SESSION_DOMAIN', (static function (?string $domain): ?string {
+        if (! $domain || ! str_contains($domain, '.') || filter_var($domain, FILTER_VALIDATE_IP)) {
+            return null;
+        }
+
+        return '.'.$domain;
+    })(config('app.domain'))),
 
     /*
     |--------------------------------------------------------------------------

@@ -1,8 +1,8 @@
 <?php
 
 $appUrl = parse_url((string) env('APP_URL', 'http://localhost'));
-$appDomain = env('APP_DOMAIN', $appUrl['host'] ?? 'localhost');
-$adminDomain = env('ADMIN_DOMAIN', 'admin.'.$appDomain);
+$appDomain = env('APP_DOMAIN') ?: ($appUrl['host'] ?? 'localhost');
+$adminDomain = env('ADMIN_DOMAIN') ?: 'admin.'.$appDomain;
 
 return [
 

@@ -38,9 +38,10 @@ const setCookie = (name: string, value: string, days = 365) => {
     const maxAge = days * 24 * 60 * 60;
     const domain = import.meta.env.VITE_APP_DOMAIN;
 
-    // Scope the cookie to the parent domain so the admin subdomain shares it...
+    // Scope the cookie to the parent domain so the admin subdomain shares it
+    // (browsers reject a cookie domain like "localhost")...
     const domainAttribute =
-        domain && window.location.hostname.endsWith(domain)
+        domain?.includes('.') && window.location.hostname.endsWith(domain)
             ? `;domain=.${domain}`
             : '';
 

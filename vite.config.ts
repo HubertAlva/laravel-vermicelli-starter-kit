@@ -26,6 +26,10 @@ const corsDomain =
 const appDomainPattern = corsDomain?.replaceAll('.', '\\.');
 
 export default defineConfig({
+    define: {
+        // Expose the resolved domain to the client (e.g. shared theme cookie)...
+        'import.meta.env.VITE_APP_DOMAIN': JSON.stringify(corsDomain ?? ''),
+    },
     plugins: lazyPlugins(() => [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.ts'],
