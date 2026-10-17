@@ -4,6 +4,8 @@ import ES_ES from '@vavt/cm-extension/dist/locale/es-ES';
 import { config, MdEditor } from 'md-editor-v3';
 import type { ToolbarNames } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
+import { useMounted } from '@vueuse/core';
+import { computed } from 'vue';
 import { toast } from 'vue-sonner';
 import { useAppearance } from '@/composables/useAppearance';
 import { cn } from '@/lib/utils';
@@ -53,6 +55,12 @@ const emit = defineEmits<{ validate: [] }>();
 
 const { resolvedAppearance } = useAppearance();
 
+// Light until hydrated: the server can't know the theme...
+const isMounted = useMounted();
+const theme = computed(() =>
+    isMounted.value ? resolvedAppearance.value : 'light',
+);
+
 async function uploadImage(file: File): Promise<string> {
     const data = new FormData();
     data.append('image', file);
@@ -92,7 +100,7 @@ async function onUploadImg(files: File[], callback: (urls: string[]) => void) {
                 ...DEFAULT_EXCLUDED_TOOLBARS,
                 ...excludeToolbars,
             ]"
-            :theme="resolvedAppearance"
+            :theme="theme"
             language="es-ES"
             no-img-zoom-in
             @update:model-value="

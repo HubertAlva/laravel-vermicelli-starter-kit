@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
 import { Menu } from '@lucide/vue';
-import { useWindowScroll } from '@vueuse/core';
+import { useMounted, useWindowScroll } from '@vueuse/core';
 import { computed, ref, watch } from 'vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import ThemeSwitcher from '@/components/ThemeSwitcher.vue';
@@ -22,7 +22,11 @@ import admin from '@/routes/admin';
 const page = usePage();
 const user = computed(() => page.props.auth.user);
 
-const { y } = useWindowScroll();
+const { y: windowY } = useWindowScroll();
+
+// Treat the page as unscrolled until hydrated, matching the server render...
+const isMounted = useMounted();
+const y = computed(() => (isMounted.value ? windowY.value : 0));
 const scrollingUp = ref(true);
 
 watch(y, (value, previousValue) => {

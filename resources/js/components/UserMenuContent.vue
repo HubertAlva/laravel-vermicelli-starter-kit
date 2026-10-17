@@ -39,13 +39,13 @@ defineProps<Props>();
                 :href="admin.dashboard().url"
             >
                 <LayoutDashboard class="mr-2 h-4 w-4" />
-                Admin panel
+                Panel de administración
             </a>
         </DropdownMenuItem>
         <DropdownMenuItem :as-child="true">
             <Link class="block w-full cursor-pointer" :href="edit()" prefetch>
                 <Settings class="mr-2 h-4 w-4" />
-                Settings
+                Configuración
             </Link>
         </DropdownMenuItem>
     </DropdownMenuGroup>
@@ -59,7 +59,7 @@ defineProps<Props>();
             data-test="logout-button"
         >
             <LogOut class="mr-2 h-4 w-4" />
-            Log out
+            Cerrar sesión
         </Link>
     </DropdownMenuItem>
 </template>

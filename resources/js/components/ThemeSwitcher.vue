@@ -17,7 +17,9 @@ function toggleAppearance(): void {
         aria-label="Cambiar tema"
         @click="toggleAppearance"
     >
-        <Sun v-if="resolvedAppearance === 'dark'" class="size-4" />
-        <Moon v-else class="size-4" />
+        <!-- Toggled with CSS: the server can't know the theme, so rendering
+             one icon conditionally would cause a hydration mismatch -->
+        <Sun class="hidden size-4 dark:block" />
+        <Moon class="size-4 dark:hidden" />
     </Button>
 </template>
