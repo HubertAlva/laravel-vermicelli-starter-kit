@@ -6,6 +6,9 @@ use App\Policies\RolePolicy;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Spatie\Permission\Models\Role as SpatieRole;
 
+/**
+ * @property int $id
+ */
 #[UsePolicy(RolePolicy::class)]
 class Role extends SpatieRole
 {

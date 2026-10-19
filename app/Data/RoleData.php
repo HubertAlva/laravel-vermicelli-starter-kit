@@ -4,11 +4,12 @@ namespace App\Data;
 
 use App\Models\Role;
 use Spatie\LaravelData\Data;
+use Spatie\Permission\Models\Permission as SpatiePermission;
 
 class RoleData extends Data
 {
     /**
-     * @param  list<string>  $permissions
+     * @param  array<int, string>  $permissions
      */
     public function __construct(
         public int $id,
@@ -30,7 +31,11 @@ class RoleData extends Data
             label: str($role->name)->headline()->toString(),
             users_count: $role->users_count ?? $role->users()->count(),
             is_protected: $role->isProtected(),
-            permissions: $role->permissions->pluck('name')->sort()->values()->all(),
+            permissions: $role->permissions
+                ->map(fn (SpatiePermission $permission): string => $permission->name)
+                ->sort()
+                ->values()
+                ->all(),
         );
     }
 }

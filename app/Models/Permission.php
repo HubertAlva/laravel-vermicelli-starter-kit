@@ -7,6 +7,9 @@ use Database\Seeders\PermissionRoleSeeder;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Spatie\Permission\Models\Permission as SpatiePermission;
 
+/**
+ * @property int $id
+ */
 #[UsePolicy(PermissionPolicy::class)]
 class Permission extends SpatiePermission
 {

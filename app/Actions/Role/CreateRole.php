@@ -11,7 +11,7 @@ class CreateRole
     public function execute(RoleFormData $data): Role
     {
         return DB::transaction(function () use ($data): Role {
-            $role = Role::create(['name' => $data->name]);
+            $role = Role::query()->create(['name' => $data->name]);
 
             $role->syncPermissions($data->permissions);
 

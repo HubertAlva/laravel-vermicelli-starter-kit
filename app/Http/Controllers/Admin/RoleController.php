@@ -70,7 +70,7 @@ class RoleController extends Controller
     /**
      * Group the permissions by the `resource` prefix of their name.
      *
-     * @return list<array{resource: string, permissions: list<PermissionData>}>
+     * @return array<int, array{resource: string, permissions: array<int, PermissionData>}>
      */
     protected function permissionGroups(): array
     {

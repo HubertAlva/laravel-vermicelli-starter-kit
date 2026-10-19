@@ -28,7 +28,7 @@ class PermissionController extends Controller
     {
         $data = PermissionFormData::from($request->validated());
 
-        $permission = Permission::create(['name' => $data->name]);
+        $permission = Permission::query()->create(['name' => $data->name]);
 
         $this->toast('Permiso creado correctamente.', id: $permission->id);
 

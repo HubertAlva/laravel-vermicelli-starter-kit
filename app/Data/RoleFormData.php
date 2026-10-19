@@ -7,7 +7,7 @@ use Spatie\LaravelData\Data;
 class RoleFormData extends Data
 {
     /**
-     * @param  list<string>  $permissions
+     * @param  array<int, string>  $permissions
      */
     public function __construct(
         public string $name,
