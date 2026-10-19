@@ -21,6 +21,11 @@ class PermissionRoleSeeder extends Seeder
         'admin' => [
             'admin.view',
         ],
+        'permissions' => [
+            'permissions.create',
+            'permissions.update',
+            'permissions.delete',
+        ],
         'posts' => [
             'posts.viewAny',
             'posts.view.unpublished',
@@ -29,6 +34,11 @@ class PermissionRoleSeeder extends Seeder
             'posts.delete',
             'posts.restore',
             'posts.forceDelete',
+        ],
+        'roles' => [
+            'roles.viewAny',
+            'roles.create',
+            'roles.update',
         ],
         'users' => [
             'users.viewAny',

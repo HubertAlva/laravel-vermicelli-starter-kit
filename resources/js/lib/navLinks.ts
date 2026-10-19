@@ -1,7 +1,14 @@
-import { FileText, FlaskConical, LayoutDashboard, Users } from '@lucide/vue';
+import {
+    FileText,
+    FlaskConical,
+    LayoutDashboard,
+    ShieldCheck,
+    Users,
+} from '@lucide/vue';
 import { home } from '@/routes';
 import admin from '@/routes/admin';
 import posts from '@/routes/admin/posts';
+import roles from '@/routes/admin/roles';
 import testForm from '@/routes/admin/test-form';
 import users from '@/routes/admin/users';
 import blog from '@/routes/blog';
@@ -47,6 +54,13 @@ export const adminNavLinks: NavItem[] = [
         icon: Users,
         componentRoot: 'admin/users',
         permission: 'users.viewAny',
+    },
+    {
+        title: 'Roles y permisos',
+        href: roles.index(),
+        icon: ShieldCheck,
+        componentRoot: 'admin/roles',
+        permission: 'roles.viewAny',
     },
     {
         title: 'Contenido',

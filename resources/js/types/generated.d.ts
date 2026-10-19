@@ -6,6 +6,14 @@ email: string,
 subject: string | null,
 message: string,
 };
+export type PermissionData = {
+id: number,
+name: string,
+is_system: boolean,
+};
+export type PermissionFormData = {
+name: string,
+};
 export type PostData = {
 id: number,
 name: string,
@@ -27,6 +35,18 @@ thumbnail: File | string | null,
 is_new_thumbnail: boolean,
 published: boolean,
 tags: string[] | null,
+};
+export type RoleData = {
+id: number,
+name: string,
+label: string,
+users_count: number,
+is_protected: boolean,
+permissions: string[],
+};
+export type RoleFormData = {
+name: string,
+permissions: string[],
 };
 export type TagData = {
 id: number,
